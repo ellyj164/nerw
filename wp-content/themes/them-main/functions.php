@@ -1645,6 +1645,11 @@ add_action('activated_plugin', function($plugin) {
  * Ensure Tutor LMS templates load correctly
  * Compatibility layer for single course and archive pages
  * 
+ * Supports multiple post type variations:
+ * - 'tutor_course' (if using the prefixed variant)
+ * - 'courses' (default Tutor LMS post type)
+ * - 'course' (alternative/legacy variant)
+ * 
  * @param string $template Current template path
  * @return string Modified template path
  */
@@ -1656,20 +1661,28 @@ function fph_tutor_template_support($template) {
     // Get the Tutor LMS course post type dynamically
     $course_post_type = function_exists('tutor') ? tutor()->course_post_type : 'courses';
     
-    // Single course - check multiple variations (both 'courses' and 'course')
-    if (is_singular($course_post_type) || is_singular('courses') || is_singular('course')) {
-        // Try plural first, then singular
-        $custom_template = locate_template('single-courses.php');
+    // Single course - check multiple variations including tutor_course
+    if (is_singular($course_post_type) || is_singular('tutor_course') || is_singular('courses') || is_singular('course')) {
+        // Try tutor_course first (most specific)
+        $custom_template = locate_template('single-tutor_course.php');
+        
+        // Try plural form
+        if (!$custom_template) {
+            $custom_template = locate_template('single-courses.php');
+        }
+        
+        // Try singular form
         if (!$custom_template) {
             $custom_template = locate_template('single-course.php');
         }
+        
         if ($custom_template) {
             return $custom_template;
         }
     }
     
     // Course archive - check multiple variations
-    if (is_post_type_archive($course_post_type) || is_post_type_archive('courses') || is_post_type_archive('course') || is_tax('course-category') || is_tax('course-tag')) {
+    if (is_post_type_archive($course_post_type) || is_post_type_archive('tutor_course') || is_post_type_archive('courses') || is_post_type_archive('course') || is_tax('course-category') || is_tax('course-tag')) {
         $custom_template = locate_template('archive-courses.php');
         if ($custom_template) {
             return $custom_template;
@@ -1683,15 +1696,24 @@ add_filter('template_include', 'fph_tutor_template_support', 99);
 /**
  * Alternative template handler for Tutor LMS using Tutor's own filter
  * This ensures the theme's single course template is used
- * Checks both plural (single-courses.php) and singular (single-course.php) variants
+ * 
+ * Checks in priority order:
+ * 1. single-tutor_course.php (most specific, handles tutor_course post type)
+ * 2. single-courses.php (plural variant)
+ * 3. single-course.php (singular variant)
  */
 function fph_tutor_single_course_template($template) {
     if (!fph_is_tutor_lms_active()) {
         return $template;
     }
     
-    // Try plural first
-    $custom_template = locate_template('single-courses.php');
+    // Try tutor_course variant first
+    $custom_template = locate_template('single-tutor_course.php');
+    
+    // Try plural form
+    if (!$custom_template) {
+        $custom_template = locate_template('single-courses.php');
+    }
     
     // If not found, try singular
     if (!$custom_template) {

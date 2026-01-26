@@ -1,6 +1,12 @@
 <?php
 /**
  * Single Post Template
+ * 
+ * This is the fallback template for all single posts and custom post types
+ * that don't have a specific template (e.g., single-{post-type}.php).
+ * 
+ * It properly uses the_content() to allow plugins (like Tutor LMS, WooCommerce, etc.)
+ * to filter and modify content through WordPress hooks without being blocked.
  *
  * @package French_Practice_Hub
  */
@@ -37,7 +43,18 @@ get_header();
                 endif;
                 ?>
                 
-                <?php the_content(); ?>
+                <?php 
+                /**
+                 * Output the main content
+                 * 
+                 * the_content() applies all content filters allowing plugins
+                 * to modify or replace content. This is essential for:
+                 * - Custom post type plugins (Tutor LMS, WooCommerce, etc.)
+                 * - Page builders (Elementor, etc.)
+                 * - Content formatting plugins
+                 */
+                the_content(); 
+                ?>
                 
                 <?php
                 wp_link_pages( array(
