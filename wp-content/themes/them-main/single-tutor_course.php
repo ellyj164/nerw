@@ -1,13 +1,18 @@
 <?php
 /**
  * Single Tutor Course Template
- * Template for Tutor LMS single course pages (tutor_course post type)
+ * Template for Tutor LMS single course pages (tutor_course post type variant)
+ * 
+ * WordPress Template Hierarchy Note:
+ * This template is loaded when the post type is 'tutor_course' (if used by Tutor LMS).
+ * For the standard 'courses' post type, WordPress uses single-courses.php or single-course.php.
  * 
  * This template provides full compatibility with Tutor LMS by using
  * Tutor's native hooks and template system while maintaining the
  * theme's design and layout structure.
  * 
  * @package French_Practice_Hub
+ * @since 1.1.0
  */
 
 get_header();
@@ -22,7 +27,8 @@ get_header();
          * Hook: tutor_course/single/before/wrap
          * Fires before the course content wrapper
          * 
-         * @since 1.0.0
+         * @hooked Tutor LMS - Course header components
+         * @since Tutor LMS 1.0.0
          */
         do_action( 'tutor_course/single/before/wrap' );
         ?>
@@ -33,7 +39,8 @@ get_header();
              * Hook: tutor_course/single/before/content
              * Fires before the main course content
              * 
-             * @since 1.0.0
+             * @hooked Tutor LMS - Course navigation breadcrumbs
+             * @since Tutor LMS 1.0.0
              */
             do_action( 'tutor_course/single/before/content' );
             
@@ -44,7 +51,8 @@ get_header();
              * 
              * Hook: tutor_course/single/content
              * 
-             * @since 1.0.0
+             * @hooked Tutor LMS - Complete course content
+             * @since Tutor LMS 1.0.0
              */
             do_action( 'tutor_course/single/content' );
             
@@ -52,7 +60,8 @@ get_header();
              * Hook: tutor_course/single/after/content
              * Fires after the main course content
              * 
-             * @since 1.0.0
+             * @hooked Tutor LMS - Related courses, comments, etc.
+             * @since Tutor LMS 1.0.0
              */
             do_action( 'tutor_course/single/after/content' );
             ?>
@@ -63,7 +72,8 @@ get_header();
          * Hook: tutor_course/single/after/wrap
          * Fires after the course content wrapper
          * 
-         * @since 1.0.0
+         * @hooked Tutor LMS - Footer course components
+         * @since Tutor LMS 1.0.0
          */
         do_action( 'tutor_course/single/after/wrap' );
         
