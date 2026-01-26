@@ -13,7 +13,45 @@
  */
 
 // Your code starts here.
-require_once __DIR__ . '/vendor/autoload.php';
+
+/**
+ * Guard against fatal errors if Composer dependencies are missing.
+ * This prevents site-wide crashes when vendor/ directory is not present
+ * (e.g., after fresh GitHub pull without running composer install).
+ */
+$autoload_file = __DIR__ . '/vendor/autoload.php';
+if ( ! file_exists( $autoload_file ) ) {
+	/**
+	 * Show admin notice when dependencies are missing.
+	 * This provides clear feedback to site administrators about the issue.
+	 * Only shown to users who can manage plugins.
+	 */
+	add_action(
+		'admin_notices',
+		function() {
+			// Only show notice to users who can manage options
+			if ( ! current_user_can( 'activate_plugins' ) ) {
+				return;
+			}
+
+			$class   = 'notice notice-error';
+			$message = sprintf(
+				/* translators: %s: plugin name */
+				__( '<strong>%s:</strong> Composer dependencies are missing. Please run <code>composer install</code> in the plugin directory, or reinstall the plugin from a complete package.', 'tutor-stripe' ),
+				'Tutor Stripe'
+			);
+			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
+		}
+	);
+
+	/**
+	 * Prevent plugin initialization when dependencies are missing.
+	 * This gracefully degrades functionality instead of causing fatal errors.
+	 */
+	return;
+}
+
+require_once $autoload_file;
 
 // Define plugin meta info.
 define( 'TUTOR_STRIPE_VERSION', '1.0.1' );
