@@ -24,10 +24,16 @@ if ( ! file_exists( $autoload_file ) ) {
 	/**
 	 * Show admin notice when dependencies are missing.
 	 * This provides clear feedback to site administrators about the issue.
+	 * Only shown to users who can manage plugins.
 	 */
 	add_action(
 		'admin_notices',
 		function() {
+			// Only show notice to users who can manage options
+			if ( ! current_user_can( 'activate_plugins' ) ) {
+				return;
+			}
+
 			$class   = 'notice notice-error';
 			$message = sprintf(
 				/* translators: %s: plugin name */
