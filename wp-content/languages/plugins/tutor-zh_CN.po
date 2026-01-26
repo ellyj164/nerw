@@ -1,0 +1,1069 @@
+# Translation of Plugins - Tutor LMS &#8211; eLearning and online course solution - Stable (latest release) in Chinese (China)
+# This file is distributed under the same license as the Plugins - Tutor LMS &#8211; eLearning and online course solution - Stable (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2024-07-25 05:57:54+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: GlotPress/4.0.3\n"
+"Language: zh_CN\n"
+"Project-Id-Version: Plugins - Tutor LMS &#8211; eLearning and online course solution - Stable (latest release)\n"
+
+#: views/pages/course-list.php:437
+msgid "View"
+msgstr "浏览"
+
+#: classes/Options_V2.php:869
+msgid "Flexible"
+msgstr "灵活"
+
+#: classes/Options_V2.php:848
+msgid "Spotlight Mode"
+msgstr "专注模式"
+
+#: templates/ecommerce/checkout.php:82
+msgid "Login"
+msgstr "登录"
+
+#: classes/TutorEDD.php:72
+msgid "This will enable sell your product via EDD"
+msgstr "这样可以通过EDD销售您的商品"
+
+#: classes/WooCommerce.php:473
+msgid "For Tutor"
+msgstr "对于 Tutor"
+
+#: classes/Options_V2.php:1051 classes/WooCommerce.php:581
+msgid "WooCommerce"
+msgstr "WooCommerce"
+
+#: classes/Post_types.php:448 classes/Post_types.php:451
+msgid "Course updated."
+msgstr "课程已更新。"
+
+#: classes/Post_types.php:449
+msgid "Custom field updated."
+msgstr "自定义域更新。"
+
+#: classes/Post_types.php:450
+msgid "Custom field deleted."
+msgstr "自定义域删除。"
+
+#: classes/Post_types.php:453
+msgid "Course published."
+msgstr "课程已发布。"
+
+#: classes/Post_types.php:454
+msgid "Course saved."
+msgstr "课程已保存。"
+
+#: classes/Post_types.php:455
+msgid "Course submitted."
+msgstr "课程已提交。"
+
+#: classes/Post_types.php:442
+msgid "M j, Y @ G:i"
+msgstr "Y-m-d \\a\\t g:ia"
+
+#: classes/Post_types.php:457
+msgid "Course draft updated."
+msgstr "课程草案已更新。"
+
+#: classes/Post_types.php:463
+msgid "View course"
+msgstr "查看课程"
+
+#: classes/Post_types.php:469
+msgid "Preview course"
+msgstr "选择课程包"
+
+#: templates/dashboard/withdraw.php:172 templates/dashboard/withdraw.php:230
+#: views/pages/ecommerce/coupon-list.php:180
+#: views/pages/withdraw_requests.php:111 views/pages/withdraw_requests.php:258
+#: assets/js/lazy-chunks/tutor-coupon-main-content.js:892
+#: assets/js/tutor-order-details.js:2786 assets/js/tutor-order-details.js:2793
+msgid "Amount"
+msgstr "金额"
+
+#: views/pages/withdraw_requests.php:105
+msgid "Withdraw Method"
+msgstr "提款方式"
+
+#: templates/dashboard/announcements.php:116
+#: templates/dashboard/purchase_history.php:109
+#: templates/dashboard/reviews.php:57 views/elements/filters.php:200
+#: views/fragments/announcement-list.php:245
+#: views/fragments/announcement-list.php:249 views/pages/announcements.php:88
+#: views/pages/course-list.php:274 views/pages/ecommerce/order-list.php:92
+#: views/pages/ecommerce/order-list.php:133 views/pages/instructors.php:109
+#: views/pages/question_answer.php:58 views/pages/quiz_attempts.php:80
+#: views/pages/students.php:63 views/pages/tools/settings-log.php:42
+#: views/pages/withdraw_requests.php:70 views/quiz/contexts.php:16
+#: views/quiz/contexts.php:66 assets/js/tutor-import-export.js:3286
+msgid "Date"
+msgstr "时间"
+
+#: ecommerce/EmailController.php:699
+#: templates/dashboard/purchase_history.php:103
+msgid "Order ID"
+msgstr "订单ID"
+
+#: classes/Admin.php:224 classes/Admin.php:225
+#: classes/Withdraw_Requests_List.php:54
+msgid "Withdraw Requests"
+msgstr "提现请求"
+
+#. translators: %s: plugin name
+#: classes/Admin.php:724
+msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
+msgstr "如果您喜欢%1$s 请留下我们 %2$s评分。先表示十分的谢意哦！"
+
+#: views/options/withdraw/withdraw_admin_options_generator.php:38
+msgid "Enable/Disable"
+msgstr "启用/禁用"
+
+#: classes/Options_V2.php:1155 views/pages/ecommerce/coupon-list.php:180
+#: assets/js/lazy-chunks/tutor-coupon-main-content.js:892
+msgid "Percent"
+msgstr "百分比"
+
+#: classes/Options_V2.php:1156
+msgid "Fixed"
+msgstr "固定"
+
+#: classes/Withdraw.php:60
+msgid "Bank Transfer"
+msgstr "银行转账"
+
+#: classes/Withdraw.php:62
+msgid "Get your payment directly into your bank account"
+msgstr "将您的付款直接存入您的银行帐户"
+
+#: classes/Withdraw.php:67
+msgid "Account Name"
+msgstr "帐户名称"
+
+#: classes/Withdraw.php:71
+msgid "Account Number"
+msgstr "账户号码"
+
+#: classes/Withdraw.php:75
+msgid "Bank Name"
+msgstr "银行名"
+
+#: classes/Withdraw.php:79
+msgid "IBAN"
+msgstr "国际银行标准账号"
+
+#: classes/Withdraw.php:83
+msgid "BIC / SWIFT"
+msgstr "BIC / Swift"
+
+#: classes/Withdraw.php:95
+msgid "Your Physical Address"
+msgstr "您的家庭住址"
+
+#: classes/Withdraw.php:96
+msgid "We will send you an E-Check to this address directly."
+msgstr "我们将直接向您发送电子检查。"
+
+#: classes/Withdraw.php:107
+msgid "PayPal E-Mail Address"
+msgstr "PayPal邮箱地址"
+
+#: classes/Withdraw.php:258
+msgid "Please save withdraw method "
+msgstr "请保存提现方式 "
+
+#: classes/Tutor.php:1150 classes/Utils.php:9432 templates/dashboard.php:48
+#: templates/dashboard/dashboard.php:136
+msgid "Dashboard"
+msgstr "仪表盘"
+
+#: classes/Utils.php:2932
+msgid "Logout"
+msgstr "退出"
+
+#: classes/Admin.php:695
+msgid "Documentation"
+msgstr "文档"
+
+#: views/options/withdraw/withdraw_admin_options_generator.php:43
+msgid "Enable "
+msgstr "启用 "
+
+#: classes/Addons.php:308
+msgid "Tutor Certificate"
+msgstr "Tutor证书"
+
+#: classes/Addons.php:268
+msgid "Tutor Course Attachments"
+msgstr "Tutor课程附件"
+
+#: classes/Addons.php:264
+msgid "Tutor Course Preview"
+msgstr "Tutor课程预览"
+
+#: classes/Addons.php:256
+msgid "Tutor Multi Instructors"
+msgstr "Tutor多讲师"
+
+#: classes/Addons.php:316
+msgid "Tutor Prerequisites"
+msgstr "Tutor预修条件"
+
+#: classes/Addons.php:276
+msgid "Tutor Report"
+msgstr "报告"
+
+#: templates/dashboard/dashboard.php:208
+msgid "Total Students"
+msgstr "学员总数"
+
+#: templates/dashboard/dashboard.php:221 views/pages/instructors.php:150
+msgid "Total Courses"
+msgstr "课程总数"
+
+#: templates/dashboard/dashboard.php:234
+msgid "Total Earnings"
+msgstr "总计收入"
+
+#: ecommerce/EmailController.php:702 templates/dashboard/dashboard.php:350
+msgid "Course Name"
+msgstr "课程名称"
+
+#: classes/Utils.php:8987
+msgid "All Time"
+msgstr "所有时间"
+
+#: classes/Student.php:291
+msgid "Incorrect Previous Password"
+msgstr "您输入的旧密码不正确"
+
+#: classes/Student.php:294
+msgid "New Password Required"
+msgstr "密码为必填项"
+
+#: classes/Student.php:297
+msgid "Confirm Password Required"
+msgstr "确认密码为必填字段"
+
+#: classes/Student.php:300
+msgid "New password and confirm password does not matched"
+msgstr "新密码和确认密码不匹配"
+
+#: classes/Taxonomies.php:48 classes/Taxonomies.php:132
+#: classes/Taxonomies.php:265
+msgid "Thumbnail"
+msgstr "缩略图"
+
+#: classes/Taxonomies.php:52 classes/Taxonomies.php:139
+msgid "Upload/Add image"
+msgstr "上传/添加图像"
+
+#: classes/Taxonomies.php:53 classes/Taxonomies.php:140
+msgid "Remove image"
+msgstr "删除图片"
+
+#: classes/Taxonomies.php:77 classes/Taxonomies.php:164
+msgid "Choose an image"
+msgstr "选择一张图像"
+
+#: classes/Taxonomies.php:79 classes/Taxonomies.php:166
+msgid "Use image"
+msgstr "作为特色图像"
+
+#: classes/Taxonomies.php:236
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:815
+msgid "Image"
+msgstr "图片"
+
+#: classes/Post_types.php:182
+msgid "Search Tags"
+msgstr "搜索标签"
+
+#: classes/Post_types.php:183
+msgid "Popular Tags"
+msgstr "热门标签"
+
+#: classes/Post_types.php:184
+msgid "All Tags"
+msgstr "所有标签"
+
+#: classes/Post_types.php:187
+msgid "Edit Tag"
+msgstr "编辑标签"
+
+#: classes/Post_types.php:188
+msgid "Update Tag"
+msgstr "更新标签"
+
+#: classes/Post_types.php:189
+msgid "Add New Tag"
+msgstr "添加新标签"
+
+#: classes/Post_types.php:190
+msgid "New Tag Name"
+msgstr "新标签命名"
+
+#: classes/Post_types.php:192
+msgid "Add or remove Tags"
+msgstr "添加或删除标签"
+
+#: classes/Post_types.php:194
+msgid "No Tags found."
+msgstr "未找到标签。"
+
+#: classes/Utils.php:9107 classes/Utils.php:9444
+#: templates/dashboard/reviews.php:28
+#: templates/dashboard/reviews/given-reviews.php:27
+msgid "Reviews"
+msgstr "评论"
+
+#: templates/dashboard/instructor/registration.php:165
+msgid "Register as instructor"
+msgstr "仅注册用户"
+
+#: classes/Options_V2.php:1668
+msgid "Primary Color"
+msgstr "主要颜色"
+
+#: classes/Options_V2.php:1677
+msgid "Primary Hover Color"
+msgstr "主要悬停颜色"
+
+#: classes/Course_Widget.php:144
+msgid "New title"
+msgstr "新标题"
+
+#: classes/Course_Widget.php:165
+msgid "Place single course id or comma (,) separated course ids"
+msgstr "放置单个课程ID或逗号（,）分隔的课程ID"
+
+#: classes/Course_Widget.php:170
+msgid "Exclude IDS:"
+msgstr "排除ID："
+
+#: classes/Course_Widget.php:173
+msgid "Place comma (,) separated courses ids which you like to exclude from the query"
+msgstr "将逗号（,）分隔的课程ID放在查询中"
+
+#: classes/Course_Widget.php:183
+msgid "Place comma (,) separated category ids"
+msgstr "放置逗号（,）分隔的分类ID"
+
+#: classes/Course_Widget.php:189
+msgid "OrderBy"
+msgstr "排序依据"
+
+#: classes/Course_Widget.php:214
+msgid "Count:"
+msgstr "计数："
+
+#: classes/Course_Widget.php:217
+msgid "Total results you like to show"
+msgstr "您喜欢显示的总结果"
+
+#: classes/Course_Widget.php:161 views/options/template/tutor_pages.php:27
+#: views/pages/ecommerce/order-list.php:126
+#: views/pages/tools/tutor_pages.php:18
+msgid "ID"
+msgstr "ID"
+
+#: templates/dashboard/logged-in.php:14
+msgid "You are already logged in"
+msgstr "您已经登录"
+
+#: classes/Utils.php:9103 assets/js/tutor-course-builder.js:3050
+msgid "Course Info"
+msgstr "课程信息"
+
+#: classes/Admin.php:109
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:645
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:654
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:658
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:850
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:788
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:827
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:845
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:859
+#: assets/js/tutor-import-export.js:1723
+msgid "Pro"
+msgstr "专业版"
+
+#: includes/translate-text.php:137 models/OrderModel.php:323
+#: assets/js/tutor-admin.js:95 assets/js/tutor-admin.js:114
+#: assets/js/tutor-admin.js:121 assets/js/tutor-admin.js:141
+#: assets/js/tutor-admin.js:143 assets/js/tutor-admin.js:144
+#: assets/js/tutor-admin.js:237 assets/js/tutor-admin.js:293
+#: assets/js/tutor-front.js:173 assets/js/tutor-front.js:217
+#: assets/js/tutor-front.js:236 assets/js/tutor-front.js:265
+#: assets/js/tutor-front.js:304 assets/js/tutor-front.js:314
+#: assets/js/tutor-front.js:317 assets/js/tutor-front.js:347
+#: assets/js/tutor-order-details.js:2795 assets/js/tutor-setup.js:135
+#: assets/js/tutor.js:816 assets/js/tutor.js:876 assets/js/tutor.js:886
+msgid "Failed"
+msgstr "不及格"
+
+#: views/quiz/attempt-details.php:313
+msgid "Instructor Note"
+msgstr "讲师"
+
+#: classes/Admin.php:272 classes/Admin.php:273 classes/Admin.php:669
+#: views/pages/feature-promotion.php:22 assets/js/tutor-addon-list.js:2500
+msgid "Upgrade to Pro"
+msgstr "升级至 Pro 版"
+
+#: classes/Options_V2.php:721 classes/Utils.php:7403
+msgid "Dashboard Page"
+msgstr "仪表盘页面"
+
+#: classes/Options_V2.php:724
+msgid "This page will be used for student and instructor dashboard"
+msgstr "此页面将用于学员和讲师仪表盘"
+
+#: classes/Course.php:2436 classes/Options_V2.php:1399
+#: classes/Options_V2.php:1407 classes/Options_V2.php:1415
+#: classes/Options_V2.php:1431 classes/Options_V2.php:1439
+#: classes/Options_V2.php:1447 classes/Options_V2.php:1455
+#: classes/Options_V2.php:1463 classes/Options_V2.php:1471
+#: classes/Options_V2.php:1479 classes/Options_V2.php:1487
+#: classes/Options_V2.php:1503 classes/Options_V2.php:1511 classes/User.php:468
+msgid "Enable"
+msgstr "启用"
+
+#: classes/Options_V2.php:825
+msgid "Course Visibility"
+msgstr "课程驱动可见性"
+
+#: classes/Options_V2.php:1729
+msgid "Gutenberg Editor"
+msgstr "古腾堡编辑"
+
+#: classes/Tutor_Setup.php:454
+msgid "Question and Answer"
+msgstr "问题和答案"
+
+#: classes/Options_V2.php:1746
+msgid "This page will be used to list all the published courses."
+msgstr "此页将用于列出所有已发布的课程。"
+
+#: classes/Options_V2.php:1752 classes/Utils.php:7404
+msgid "Instructor Registration Page"
+msgstr "讲师注册页面"
+
+#: classes/Options_V2.php:1761 classes/Utils.php:7405
+msgid "Student Registration Page"
+msgstr "学员注册页面"
+
+#: classes/Options_V2.php:1131
+msgid "Fees are charged from the entire sales amount. The remaining amount will be divided among admin and instructors."
+msgstr "费用从全部销售额中扣除。剩余金额将分配给管理员和讲师。"
+
+#: classes/Post_types.php:163
+msgid "Course Categories"
+msgstr "课程分类"
+
+#: classes/Post_types.php:370
+msgctxt "post type general name"
+msgid "Assignments"
+msgstr "作业"
+
+#: classes/Post_types.php:371
+msgctxt "post type singular name"
+msgid "Assignment"
+msgstr "分配"
+
+#: classes/Post_types.php:372
+msgctxt "admin menu"
+msgid "Assignments"
+msgstr "作业"
+
+#: classes/Post_types.php:373
+msgctxt "add new on admin bar"
+msgid "Assignment"
+msgstr "分配"
+
+#: classes/Post_types.php:375
+msgid "Add New Assignment"
+msgstr "添加新作业"
+
+#: classes/Post_types.php:376
+msgid "New Assignment"
+msgstr "新的作业"
+
+#: classes/Post_types.php:377
+msgid "Edit Assignment"
+msgstr "编辑作业"
+
+#: classes/Post_types.php:378
+msgid "View Assignment"
+msgstr "查看作业"
+
+#: classes/Post_types.php:379
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:838
+#: assets/js/tutor-import-export.js:3279
+msgid "Assignments"
+msgstr "作业"
+
+#: classes/Post_types.php:380
+msgid "Search Assignments"
+msgstr "搜索作业"
+
+#: classes/Post_types.php:381
+msgid "Parent Assignments:"
+msgstr "父级作业："
+
+#: classes/Post_types.php:382
+msgid "No Assignments found."
+msgstr "没有找到任务。"
+
+#: classes/Post_types.php:383
+msgid "No Assignments found in Trash."
+msgstr "在回收站没有找到作业"
+
+#: includes/tutor-general-functions.php:168
+msgid "Search Course Category. ex. Design, Development, Business"
+msgstr "搜索课程类别。例如：设计，开发，业务"
+
+#: includes/tutor-general-functions.php:169
+msgid "Select a category"
+msgstr "选择一个分类"
+
+#: classes/Utils.php:9382 views/elements/create-course-empty-state.php:25
+msgid "Create Course"
+msgstr "创建课程"
+
+#: classes/Withdraw.php:90
+msgid "E-Check"
+msgstr "电子支票"
+
+#: classes/Lesson.php:349 classes/Options_V2.php:898
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:831
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:856
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:859
+#: assets/js/tutor-import-export.js:2426 assets/js/tutor-import-export.js:3275
+msgid "Lesson"
+msgstr "课时"
+
+#: classes/Utils.php:9552
+msgid "External URL"
+msgstr "外部链接"
+
+#: classes/Utils.php:9564
+msgid "Embedded"
+msgstr "嵌入代码"
+
+#: templates/dashboard/assignments/review.php:87
+msgid "Assignment Description:"
+msgstr "任务描述："
+
+#: templates/dashboard/assignments/review.php:99
+msgid "Attach assignment file(s)"
+msgstr "上传作业附件"
+
+#: templates/dashboard/assignments/review.php:137
+msgid "Evaluation"
+msgstr "评价"
+
+#: templates/dashboard/assignments/review.php:166
+msgid "Evaluate this submission"
+msgstr "评估此提交"
+
+#: templates/dashboard/assignments/review.php:25
+msgid "Assignments submission not found or not completed"
+msgstr "未找到或未完成提交分配"
+
+#: templates/single/quiz/parts/meta.php:41
+msgid "No limit"
+msgstr "无限制"
+
+#: includes/translate-text.php:133 models/OrderModel.php:321
+#: templates/course-filter/filters.php:16
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:886
+#: assets/js/tutor-order-details.js:2795
+msgid "Paid"
+msgstr "已付"
+
+#: classes/TutorEDD.php:93
+msgid "Easy Digital Downloads"
+msgstr "Easy Digital Downloads"
+
+#: classes/Addons.php:328
+msgid "Paid Memberships Pro"
+msgstr "Paid Memberships Pro"
+
+#: classes/Addons.php:260
+msgid "Tutor Assignments"
+msgstr "Tutor 作业"
+
+#: classes/Options_V2.php:1023
+msgid "Monetization"
+msgstr "赚钱化"
+
+#: classes/Options_V2.php:1042
+msgid "Disable Monetization"
+msgstr "禁用赚钱化"
+
+#: classes/Addons.php:324
+msgid "WooCommerce Subscriptions"
+msgstr "WooCommerce Subscriptions 订阅"
+
+#: includes/translate-text.php:49 views/quiz/attempt-details.php:715
+msgid "Correct"
+msgstr "正确"
+
+#: views/quiz/attempt-details.php:723
+msgid "Incorrect"
+msgstr "错误"
+
+#: ecommerce/EmailController.php:583 templates/dashboard/reviews.php:93
+msgid "Course:"
+msgstr "课程："
+
+#: templates/dashboard/reviews/edit-review-form.php:25
+#: templates/dashboard/reviews/given-reviews.php:122 views/modal/review.php:42
+msgid "Update Review"
+msgstr "更新评价"
+
+#. translators: %s: course name
+#: templates/single/lesson/required-enroll.php:18
+msgid "Course name : %s"
+msgstr "课程名字 :%s"
+
+#: classes/Options_V2.php:851
+msgid "This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons."
+msgstr "这将隐藏标题和页脚，并在学员查看课程时启用聚光灯（全屏）模式。"
+
+#: classes/Options_V2.php:771
+msgid "Pagination"
+msgstr "分页"
+
+#: classes/Utils.php:10391
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:903
+#: assets/js/tutor-course-builder.js:3073
+msgid "Classic Editor"
+msgstr "经典编辑器"
+
+#: classes/Options_V2.php:942
+msgid "The current quiz answers are submitted automatically."
+msgstr "当前测验答案将自动提交。"
+
+#: classes/Options_V2.php:949
+msgid "Choose which action to follow when the quiz time expires."
+msgstr "选择测验时间到期时应遵循的操作。"
+
+#: classes/Options_V2.php:1177
+msgid "Instructors should earn equal or above this amount to make a withdraw request."
+msgstr "讲师应赚取等额或超过此金额，以提出提款请求。"
+
+#: classes/Course.php:2435 classes/Options_V2.php:1258
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:896
+msgid "Difficulty Level"
+msgstr "难度等级"
+
+#: classes/Options_V2.php:1398 views/pages/course-list.php:271
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:890
+msgid "Author"
+msgstr "作者"
+
+#: classes/Quiz.php:241
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:848
+msgid "Random"
+msgstr "随机"
+
+#: classes/Quiz.php:242
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:848
+msgid "Sorting"
+msgstr "排序"
+
+#: classes/Quiz.php:243
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:848
+msgid "Ascending"
+msgstr "升序"
+
+#: classes/Quiz.php:244
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:848
+msgid "Descending"
+msgstr "降序"
+
+#: classes/Addons.php:252
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:896
+msgid "Content Drip"
+msgstr "内容包含"
+
+#: classes/Addons.php:312
+msgid "Gradebook"
+msgstr "成绩单"
+
+#: classes/Utils.php:7358 includes/translate-text.php:69
+#: models/OrderModel.php:291 templates/dashboard/purchase_history.php:213
+#: assets/js/tutor-order-details.js:2808
+msgid "Completed"
+msgstr "已完成"
+
+#: classes/Utils.php:7362
+msgid "In Progress"
+msgstr "进行中"
+
+#: classes/Utils.php:7364
+msgid "Not Taken"
+msgstr "没有采用"
+
+#: templates/dashboard/withdraw.php:227
+msgid "Requested On"
+msgstr "要求启用"
+
+#. Plugin Name of the plugin
+#: tutor.php classes/Admin.php:125 classes/Admin.php:126 classes/Admin.php:725
+#: classes/Gutenberg.php:144
+msgid "Tutor LMS"
+msgstr "Tutor LMS"
+
+#. Author of the plugin
+#: tutor.php
+msgid "Themeum"
+msgstr "Themeum"
+
+#. Author URI of the plugin
+#: tutor.php
+msgid "https://themeum.com"
+msgstr "https://themeum.com"
+
+#: classes/Tutor.php:1050
+msgid "Tutor Instructor"
+msgstr "Tutor讲师"
+
+#: templates/course-embed.php:99 templates/loop/course-author.php:36
+#: templates/loop/meta.php:57
+msgid "In"
+msgstr "在"
+
+#: templates/course-filter/filters.php:15
+#: templates/dashboard/my-courses.php:190 templates/loop/course-in-cart.php:19
+#: templates/single/course/course-entry-box.php:255
+#: templates/single/course/wc-price-html.php:20 views/pages/course-list.php:378
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:886
+msgid "Free"
+msgstr "免费"
+
+#: templates/dashboard/assignments/review.php:19
+msgid "Sorry, but you are looking for something that isn't here."
+msgstr "抱歉，您查找的内容不存在。"
+
+#: templates/profile/bio.php:24
+msgid "Bio data is empty"
+msgstr "简介数据是空的"
+
+#: templates/dashboard/instructor/registration.php:58
+#: templates/dashboard/instructor/registration.php:61
+#: templates/dashboard/my-profile.php:33
+#: templates/dashboard/registration.php:60
+#: templates/dashboard/registration.php:63
+#: templates/dashboard/settings/profile.php:126
+#: templates/dashboard/settings/profile.php:128
+#: templates/ecommerce/billing-form-fields.php:35
+#: templates/ecommerce/billing-form-fields.php:37
+#: views/pages/add_new_instructor.php:41 views/pages/add_new_instructor.php:47
+#: views/pages/instructors.php:296
+msgid "First Name"
+msgstr "名字"
+
+#: templates/dashboard/instructor/registration.php:68
+#: templates/dashboard/instructor/registration.php:71
+#: templates/dashboard/my-profile.php:37
+#: templates/dashboard/registration.php:70
+#: templates/dashboard/registration.php:73
+#: templates/dashboard/settings/profile.php:133
+#: templates/dashboard/settings/profile.php:135
+#: templates/ecommerce/billing-form-fields.php:44
+#: templates/ecommerce/billing-form-fields.php:46
+#: views/pages/add_new_instructor.php:55 views/pages/add_new_instructor.php:61
+#: views/pages/instructors.php:304
+msgid "Last Name"
+msgstr "姓氏"
+
+#: templates/dashboard/my-profile.php:49
+#: templates/dashboard/settings/profile.php:149
+#: templates/dashboard/settings/profile.php:151
+#: views/pages/add_new_instructor.php:94 views/pages/add_new_instructor.php:100
+#: views/pages/instructors.php:322
+msgid "Phone Number"
+msgstr "电话号码"
+
+#: templates/dashboard/instructor/registration.php:108
+#: templates/dashboard/instructor/registration.php:111
+#: templates/dashboard/registration.php:108
+#: templates/dashboard/registration.php:111
+#: templates/dashboard/settings/nav-bar.php:25 templates/login-form.php:63
+#: templates/template-part/form-retrieve-password.php:36
+#: views/pages/add_new_instructor.php:107
+#: views/pages/add_new_instructor.php:113 views/pages/instructors.php:347
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:640
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:890
+msgid "Password"
+msgstr "密码"
+
+#: templates/dashboard/settings/profile.php:179
+#: views/pages/add_new_instructor.php:133 views/pages/instructors.php:370
+msgid "Bio"
+msgstr "简介"
+
+#: classes/Utils.php:9392 templates/dashboard.php:48
+#: templates/dashboard/dashboard.php:338 templates/dashboard/my-courses.php:75
+msgid "My Courses"
+msgstr "我的课程"
+
+#: templates/single/quiz/top.php:60 views/quiz/contexts.php:97
+#: views/quiz/header-context/course-single-previous-attempts.php:32
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:845
+msgid "Questions"
+msgstr "问题"
+
+#: templates/dashboard/assignments.php:88 views/quiz/contexts.php:20
+#: views/quiz/contexts.php:70
+#: views/quiz/header-context/course-single-previous-attempts.php:44
+msgid "Total Marks"
+msgstr "总分"
+
+#: views/quiz/contexts.php:23 views/quiz/contexts.php:74
+msgid "Earned Marks"
+msgstr "获得分"
+
+#: classes/Quiz_Attempts_List.php:204 includes/translate-text.php:45
+#: views/quiz/attempt-details.php:288 views/quiz/attempt-table.php:150
+msgid "Pass"
+msgstr "通过"
+
+#: classes/Quiz_Attempts_List.php:210 includes/translate-text.php:53
+#: views/quiz/attempt-details.php:290 views/quiz/attempt-table.php:151
+msgid "Fail"
+msgstr "失败"
+
+#: templates/dashboard/my-profile.php:29 views/pages/students.php:106
+msgid "Registration Date"
+msgstr "注册日期"
+
+#: templates/course-filter/course-archive-filter-bar.php:26
+msgid "Release Date (newest first)"
+msgstr "发布日期（从新到旧）"
+
+#: templates/course-filter/course-archive-filter-bar.php:29
+msgid "Release Date (oldest first)"
+msgstr "发布日期（从旧到新）"
+
+#. translators: %1$s is the number of selected provinces, and %2$s is the total
+#. number of provinces
+#: classes/Backend_Page_Trait.php:145
+#: templates/dashboard/announcements/create.php:65
+#: templates/dashboard/announcements/details.php:41
+#: templates/dashboard/announcements/update.php:64
+#: templates/dashboard/my-courses.php:326
+#: templates/dashboard/reviews/given-reviews.php:119
+#: templates/dashboard/withdraw.php:191 templates/modal/confirm.php:55
+#: views/elements/bulk-confirm-popup.php:33
+#: views/elements/common-confirm-popup.php:65
+#: views/fragments/announcement-list.php:88
+#: views/fragments/announcement-list.php:164
+#: views/fragments/announcement-list.php:217 views/modal/review.php:39
+#: views/options/template/common/modal-confirm.php:38
+#: views/pages/instructors.php:385 views/pages/tools/manage-tokens.php:130
+#: views/pages/tools/manage-tokens.php:195
+#: views/pages/withdraw_requests.php:381 views/pages/withdraw_requests.php:439
+#: views/qna/qna-new.php:30 views/qna/qna-table.php:182
+#: assets/js/lazy-chunks/tutor-coupon-main-content.js:879
+#: assets/js/lazy-chunks/tutor-coupon-main-content.js:914
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:576
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:577
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:638
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:640
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:727
+#: assets/js/lazy-chunks/tutor-course-builder-additional.js:747
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:753
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:850
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:871
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:898
+#: assets/js/lazy-chunks/tutor-course-builder-basic.js:968
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:711
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:712
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:772
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:785
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:788
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:799
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:801
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:806
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:811
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:813
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:815
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:840
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:854
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:856
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:863
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:943
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:963
+#: assets/js/tutor-addon-list.js:2491 assets/js/tutor-addon-list.js:2492
+#: assets/js/tutor-coupon.js:1166 assets/js/tutor-course-builder.js:3050
+#: assets/js/tutor-course-builder.js:3102
+#: assets/js/tutor-course-builder.js:3106 assets/js/tutor-import-export.js:3267
+#: assets/js/tutor-import-export.js:3278 assets/js/tutor-import-export.js:3300
+#: assets/js/tutor-order-details.js:2776 assets/js/tutor-order-details.js:2787
+#: assets/js/tutor-order-details.js:2789 assets/js/tutor-order-details.js:2793
+#: assets/js/tutor-payment-settings.js:2388
+#: assets/js/tutor-payment-settings.js:2965
+#: assets/js/tutor-payment-settings.js:2991
+#: assets/js/tutor-tax-settings.js:2759 assets/js/tutor-tax-settings.js:2764
+#: assets/js/tutor-tax-settings.js:2795 assets/js/tutor-tax-settings.js:2803
+msgid "Cancel"
+msgstr "取消"
+
+#: templates/course-filter/course-archive-filter-bar.php:32
+msgid "Course Title (a-z)"
+msgstr "课程名称(a-z)"
+
+#: templates/course-filter/course-archive-filter-bar.php:35
+msgid "Course Title (z-a)"
+msgstr "课程标题（z-a）"
+
+#: templates/login-form.php:59
+msgid "Username or Email Address"
+msgstr "用户名或邮箱地址"
+
+#: templates/login-form.php:80
+msgid "Forgot Password?"
+msgstr "忘记密码？"
+
+#: classes/Admin.php:262 classes/Admin.php:263 classes/Admin.php:674
+#: classes/Utils.php:2928
+#: templates/dashboard/notifications/profile-completion.php:22
+#: templates/dashboard/settings.php:13
+#: templates/dashboard/settings/reset-password.php:14
+#: templates/dashboard/settings/social-profile.php:15
+#: templates/dashboard/settings/withdraw-settings.php:21
+#: templates/ecommerce/billing.php:14 views/options/settings.php:21
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:854
+#: assets/js/tutor-import-export.js:3279 assets/js/tutor-import-export.js:3283
+msgid "Settings"
+msgstr "设置"
+
+#: templates/dashboard/dashboard.php:179
+#: templates/dashboard/enrolled-courses.php:26
+msgid "Active Courses"
+msgstr "启用课程"
+
+#: templates/dashboard/dashboard.php:192
+#: templates/dashboard/enrolled-courses.php:27
+msgid "Completed Courses"
+msgstr "已完成的课程"
+
+#: views/metabox/user-profile-fields.php:46
+msgid "Profile Photo"
+msgstr "头像"
+
+#: views/fragments/thumbnail-uploader.php:61
+#: views/options/field-types/upload_half.php:42
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:788
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:811
+#: assets/js/lazy-chunks/tutor-course-builder-curriculum.js:815
+#: assets/js/tutor-payment-settings.js:2987
+#: assets/js/tutor-payment-settings.js:2991
+msgid "Upload Image"
+msgstr "上传图片"
+
+#. Description of the plugin
+#: tutor.php
+msgid "Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes."
+msgstr "Tutor是一个完整的解决方案，在WordPress中创建一个学习管理系统的方式。它可以帮助您创建小型到大型的在线教育网站，非常方便。强大的功能，如报告，证书，课程预览，私人文档共享，使Tutor成为任何教育机构的强大插件。"
+
+#: classes/Utils.php:9448 templates/dashboard/my-quiz-attempts.php:35
+msgid "My Quiz Attempts"
+msgstr "我的测验尝试"
+
+#: templates/dashboard/settings/withdraw-settings.php:28
+msgid "Select a withdraw method"
+msgstr "选择提现方式"
+
+#: templates/dashboard/settings/withdraw-settings.php:53
+msgid "Min withdraw"
+msgstr "最小提现"
+
+#: templates/dashboard/settings/withdraw-settings.php:146
+msgid "Save Withdrawal Account"
+msgstr "存取款账户"
+
+#: classes/Utils.php:9440 templates/dashboard/dashboard.php:166
+#: templates/dashboard/enrolled-courses.php:25
+msgid "Enrolled Courses"
+msgstr "报名课程"
+
+#: models/CourseModel.php:1107 views/elements/filters.php:104
+msgid "All Courses"
+msgstr "所有课程"
+
+#: classes/Options_V2.php:1168 templates/dashboard/settings/nav-bar.php:30
+msgid "Withdraw"
+msgstr "提现"
+
+#: classes/Utils.php:9436 templates/dashboard/my-profile.php:65
+msgid "My Profile"
+msgstr "我的资料"
+
+#: templates/dashboard/my-courses.php:321
+msgid "Delete This Course?"
+msgstr "确认删除课程吗？"
+
+#: templates/dashboard/settings/nav-bar.php:20
+msgid "Profile"
+msgstr "资料"
+
+#: templates/dashboard/settings/profile.php:213
+#: templates/dashboard/settings/social-profile.php:46
+msgid "Update Profile"
+msgstr "更新个人资料"
+
+#: templates/dashboard/settings/reset-password.php:89
+msgid "Reset Password"
+msgstr "重置密码"
+
+#: templates/dashboard/settings/reset-password.php:38
+msgid "New Password"
+msgstr "新密码"
+
+#: templates/dashboard/my-profile.php:41 views/pages/instructors.php:314
+msgid "Username"
+msgstr "用户名"
+
+#: classes/Addons.php:280 templates/dashboard/my-profile.php:45
+#: views/pages/instructors.php:146 views/pages/instructors.php:192
+#: views/pages/students.php:102
+msgid "Email"
+msgstr "电子邮件"
+
+#: templates/dashboard/reviews/given-reviews.php:59
+msgid "Course: "
+msgstr "课程： "
+
+#: views/quiz/contexts.php:71
+msgid "Pass Marks"
+msgstr "通过标记"
+
+#: templates/dashboard/reviews.php:40
+#: templates/dashboard/reviews/given-reviews.php:35
+msgid "Given"
+msgstr "特定"
+
+#: templates/dashboard/reviews.php:34
+#: templates/dashboard/reviews/given-reviews.php:32
+msgid "Received"
+msgstr "已收到"
+
+#. translators: %s: time difference
+#: helpers/DateTimeHelper.php:199
+#: templates/dashboard/question-answer/answers.php:41
+#: templates/dashboard/question-answer/answers.php:78
+#: templates/single/course/enrolled/announcements.php:41
+#: templates/single/course/reviews-loop.php:35 views/pages/answer.php:62
+#: views/pages/answer.php:107
+msgid "%s ago"
+msgstr "%s 前"

@@ -1,0 +1,16 @@
+{
+    "version": "1.0.1",
+    "name": "themeum/tutor-payment-stripe",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "stripe/stripe-php": "^14.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ollyo\\PaymentHub\\": "../tutor/ecommerce/PaymentGateways/Paypal/src",
+            "Ollyo\\PaymentHub\\Payments\\Stripe\\": "payments",
+            "TutorStripe\\": "integration"
+        }
+    }
+}
