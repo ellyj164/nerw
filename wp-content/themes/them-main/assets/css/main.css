@@ -57,6 +57,10 @@
     --border-light: #E8EAED;
     --gray-500: #9AA0A6;
     
+    /* Hero-specific colors (for white video background) */
+    --hero-text-color: #1F1F1F;  /* Black for readability on white video */
+    --hero-text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+    
     /* Design System Enhancements */
     --gradient-primary: linear-gradient(135deg, #0056D2 0%, #D9006C 100%);
     --gradient-success: linear-gradient(135deg, #1E8E3E 0%, #34A853 100%);
@@ -88,6 +92,22 @@
     --space-xl: 32px;
     --space-2xl: 48px;
     --space-3xl: 64px;
+}
+
+/* Dark Mode Variables */
+body.dark-mode {
+    --text-color: #E8EAED;
+    --text-secondary: #BDC1C6;
+    --text-light: #9AA0A6;
+    --bg-color: #1F1F1F;
+    --bg-secondary: #2C2C2C;
+    --white-color: #2C2C2C;
+    --border-color: #3C4043;
+    --border-light: #5F6368;
+    
+    /* Hero text stays dark for white video background */
+    --hero-text-color: #1F1F1F;
+    --hero-text-shadow: 0 2px 4px rgba(255,255,255,0.8);
 }
 
 /* Base Styles - Enhanced Typography with Nunito */
@@ -581,9 +601,9 @@ body.translated-rtl {
 .hero h1 {
     font-size: 3.5rem;
     font-weight: 800;
-    color: var(--white-color);
+    color: var(--hero-text-color);
     margin: 0 0 20px;
-    text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    text-shadow: var(--hero-text-shadow);
     line-height: 1.2;
 }
 
@@ -591,8 +611,8 @@ body.translated-rtl {
     font-size: 1.375rem;
     margin-bottom: 40px;
     line-height: 1.6;
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    color: var(--hero-text-color);
+    text-shadow: var(--hero-text-shadow);
 }
 
 .hero .subtitle-line-1 {
@@ -3459,5 +3479,264 @@ body.translated-rtl {
     
     .showcase-feature .feature-icon {
         font-size: 1.25rem;
+    }
+}
+
+/* ============================================
+   DARK MODE TOGGLE
+   ============================================ */
+.dark-mode-toggle {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    background-color: var(--border-color);
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    padding: 3px;
+}
+
+body.dark-mode .dark-mode-toggle {
+    background-color: var(--primary-color);
+}
+
+.dark-mode-toggle-slider {
+    width: 24px;
+    height: 24px;
+    background-color: var(--white-color);
+    border-radius: 50%;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+}
+
+body.dark-mode .dark-mode-toggle-slider {
+    transform: translateX(30px);
+}
+
+.dark-mode-toggle-icon {
+    display: block;
+}
+
+.dark-mode-toggle-icon.sun {
+    display: none;
+}
+
+body.dark-mode .dark-mode-toggle-icon.moon {
+    display: none;
+}
+
+body.dark-mode .dark-mode-toggle-icon.sun {
+    display: block;
+}
+
+/* Smooth transitions for dark mode */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header,
+.footer,
+.feature-card,
+.btn,
+.search-container input {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============================================
+   NEWSLETTER SECTION
+   ============================================ */
+.newsletter-section {
+    background-color: var(--primary-color);
+    padding: 60px 20px;
+    text-align: center;
+}
+
+body.dark-mode .newsletter-section {
+    background-color: var(--primary-dark);
+}
+
+.newsletter-section h3 {
+    color: var(--white-color);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 15px;
+}
+
+.newsletter-section p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin: 0 0 30px;
+}
+
+.newsletter-form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.newsletter-form input[type="email"] {
+    flex: 1;
+    min-width: 250px;
+    padding: 15px 20px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    outline: none;
+}
+
+.newsletter-form button {
+    padding: 15px 30px;
+    background-color: var(--magenta-accent);
+    color: var(--white-color);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.newsletter-form button:hover {
+    background-color: #c00060;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ============================================
+   CTA BUTTONS SECTION
+   ============================================ */
+.cta-buttons-section {
+    padding: 60px 20px;
+    background-color: var(--bg-secondary);
+    text-align: center;
+}
+
+body.dark-mode .cta-buttons-section {
+    background-color: var(--bg-color);
+}
+
+.cta-buttons-section h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 40px;
+    color: var(--text-color);
+}
+
+.cta-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cta-button-group {
+    flex: 1;
+    min-width: 280px;
+    max-width: 450px;
+}
+
+.cta-button-group h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 20px;
+    color: var(--text-color);
+}
+
+.community-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.community-btn {
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-block;
+}
+
+.community-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.donation-btn {
+    padding: 15px 40px;
+    background: var(--gradient-primary);
+    color: var(--white-color);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-block;
+    box-shadow: var(--shadow-md);
+}
+
+.donation-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN FOR NEW COMPONENTS
+   ============================================ */
+@media (max-width: 768px) {
+    .newsletter-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .newsletter-form input[type="email"],
+    .newsletter-form button {
+        width: 100%;
+        min-width: 100%;
+    }
+    
+    .cta-buttons-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+    
+    .cta-button-group {
+        max-width: 100%;
+    }
+    
+    .dark-mode-toggle {
+        width: 50px;
+        height: 26px;
+    }
+    
+    .dark-mode-toggle-slider {
+        width: 20px;
+        height: 20px;
+    }
+    
+    body.dark-mode .dark-mode-toggle-slider {
+        transform: translateX(24px);
     }
 }

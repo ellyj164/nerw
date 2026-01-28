@@ -1,4 +1,39 @@
     <footer class="footer">
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+            <div class="container">
+                <h3><?php esc_html_e( 'Subscribe to Our Newsletter', 'french-practice-hub' ); ?></h3>
+                <p><?php esc_html_e( 'Get the latest French learning tips, resources, and updates delivered to your inbox', 'french-practice-hub' ); ?></p>
+                <form class="newsletter-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
+                    <?php wp_nonce_field( 'newsletter_subscribe', 'newsletter_nonce' ); ?>
+                    <input type="hidden" name="action" value="newsletter_subscribe">
+                    <input type="email" name="newsletter_email" placeholder="<?php esc_attr_e( 'Enter your email address', 'french-practice-hub' ); ?>" required>
+                    <button type="submit"><?php esc_html_e( 'Subscribe', 'french-practice-hub' ); ?></button>
+                </form>
+            </div>
+        </section>
+        
+        <!-- CTA Buttons Section -->
+        <section class="cta-buttons-section">
+            <div class="container">
+                <h3><?php esc_html_e( 'Join Our Community & Support Us', 'french-practice-hub' ); ?></h3>
+                <div class="cta-buttons-container">
+                    <div class="cta-button-group">
+                        <h4><?php esc_html_e( 'Join Our Community', 'french-practice-hub' ); ?></h4>
+                        <div class="community-buttons">
+                            <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A1.1 (Pre-Beginner)' ) ); ?>" class="community-btn">A1.1</a>
+                            <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A1 (Beginner)' ) ); ?>" class="community-btn">A1</a>
+                            <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A2 (Pre-Intermediate)' ) ); ?>" class="community-btn">A2</a>
+                        </div>
+                    </div>
+                    <div class="cta-button-group">
+                        <h4><?php esc_html_e( 'Support Our Mission', 'french-practice-hub' ); ?></h4>
+                        <a href="<?php echo esc_url( home_url( '/donate/' ) ); ?>" class="donation-btn"><?php esc_html_e( 'Make a Donation', 'french-practice-hub' ); ?></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
@@ -151,7 +186,7 @@
             </div>
             
             <div class="footer-bottom">
-                <p><?php fph_translate_e( 'footer_copyright' ); ?></p>
+                <p>Copyright © 2026 Fidele FLE | French Practice Hub - All rights reserved</p>
             </div>
         </div>
     </footer>

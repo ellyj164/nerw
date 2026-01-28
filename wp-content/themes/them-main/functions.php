@@ -1740,3 +1740,41 @@ function fph_maybe_flush_rewrites() {
     }
 }
 add_action('admin_init', 'fph_maybe_flush_rewrites');
+
+/**
+ * Handle newsletter subscription form
+ */
+function fph_handle_newsletter_subscribe() {
+    // Verify nonce
+    if ( ! isset( $_POST['newsletter_nonce'] ) || ! wp_verify_nonce( $_POST['newsletter_nonce'], 'newsletter_subscribe' ) ) {
+        wp_die( esc_html__( 'Security check failed', 'french-practice-hub' ) );
+    }
+    
+    // Sanitize email
+    $email = isset( $_POST['newsletter_email'] ) ? sanitize_email( $_POST['newsletter_email'] ) : '';
+    
+    if ( empty( $email ) || ! is_email( $email ) ) {
+        wp_redirect( add_query_arg( 'newsletter', 'invalid', wp_get_referer() ) );
+        exit;
+    }
+    
+    // Store email in WordPress options or integrate with email service
+    // For now, we'll just log it as a custom post type or option
+    $subscribers = get_option( 'fph_newsletter_subscribers', array() );
+    
+    if ( ! in_array( $email, $subscribers ) ) {
+        $subscribers[] = $email;
+        update_option( 'fph_newsletter_subscribers', $subscribers );
+        
+        // You can add integration with MailChimp, SendGrid, etc. here
+        // do_action( 'fph_new_newsletter_subscriber', $email );
+        
+        wp_redirect( add_query_arg( 'newsletter', 'success', wp_get_referer() ) );
+    } else {
+        wp_redirect( add_query_arg( 'newsletter', 'exists', wp_get_referer() ) );
+    }
+    
+    exit;
+}
+add_action( 'admin_post_nopriv_newsletter_subscribe', 'fph_handle_newsletter_subscribe' );
+add_action( 'admin_post_newsletter_subscribe', 'fph_handle_newsletter_subscribe' );

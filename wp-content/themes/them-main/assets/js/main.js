@@ -3,10 +3,48 @@
  * Handles mobile menu, search, and dropdown functionality
  */
 
+// ============================================
+// DARK MODE FUNCTIONALITY - Applied early to prevent FOUC
+// ============================================
+
+// Check for saved theme preference or default to light mode
+(function() {
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    if (currentTheme === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        document.body.classList.add('dark-mode');
+    }
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     // Configuration constants
     const GOOGLE_TRANSLATE_FALLBACK_DELAY = 2000; // ms - time to wait before falling back to Polylang/WPML
     const MOBILE_MENU_FOCUS_DELAY = 300; // ms - matches CSS transition duration for mobile menu
+    
+    // ============================================
+    // DARK MODE TOGGLE
+    // ============================================
+    
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+    // Set initial aria-pressed state
+    if (darkModeToggle) {
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        darkModeToggle.setAttribute('aria-pressed', isDarkMode ? 'true' : 'false');
+        
+        // Toggle dark mode on button click
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // Update aria-pressed for accessibility
+            const isDark = document.body.classList.contains('dark-mode');
+            darkModeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+            
+            // Save the preference
+            const theme = isDark ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        });
+    }
     
     // Google Translate functionality
     function triggerGoogleTranslate(langCode) {
