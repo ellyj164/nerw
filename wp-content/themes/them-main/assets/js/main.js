@@ -8,6 +8,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const GOOGLE_TRANSLATE_FALLBACK_DELAY = 2000; // ms - time to wait before falling back to Polylang/WPML
     const MOBILE_MENU_FOCUS_DELAY = 300; // ms - matches CSS transition duration for mobile menu
     
+    // ============================================
+    // DARK MODE FUNCTIONALITY
+    // ============================================
+    
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply the saved theme on page load
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+    
+    // Toggle dark mode on button click
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // Save the preference
+            const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        });
+    }
+    
     // Google Translate functionality
     function triggerGoogleTranslate(langCode) {
         // Map language codes to Google Translate format
