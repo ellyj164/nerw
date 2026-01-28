@@ -2867,10 +2867,22 @@ body.translated-rtl {
         padding: 120px 20px;
     }
     
-    /* Mobile responsive video */
+    /* Mobile responsive video - Ensure video displays */
     .hero-video {
         object-fit: cover;
         object-position: center center;
+        /* Force video to display on mobile */
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        /* Ensure video wrapper is visible */
+    }
+    
+    .hero-video-wrapper {
+        display: block !important;
+        position: absolute !important;
+        width: 100% !important;
+        height: 100% !important;
     }
     
     .hero-video-overlay {
@@ -2901,6 +2913,13 @@ body.translated-rtl {
     
     .header-actions {
         gap: 8px;
+    }
+    
+    /* Ensure Google Translate widget is visible on mobile */
+    .google-translate-widget,
+    #google_translate_widget_container {
+        display: flex !important;
+        visibility: visible !important;
     }
     
     /* Make Google Translate widget more compact on mobile */
