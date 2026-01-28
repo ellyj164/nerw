@@ -4,7 +4,9 @@
             <div class="container">
                 <h3><?php esc_html_e( 'Subscribe to Our Newsletter', 'french-practice-hub' ); ?></h3>
                 <p><?php esc_html_e( 'Get the latest French learning tips, resources, and updates delivered to your inbox', 'french-practice-hub' ); ?></p>
-                <form class="newsletter-form" action="#" method="post">
+                <form class="newsletter-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
+                    <?php wp_nonce_field( 'newsletter_subscribe', 'newsletter_nonce' ); ?>
+                    <input type="hidden" name="action" value="newsletter_subscribe">
                     <input type="email" name="newsletter_email" placeholder="<?php esc_attr_e( 'Enter your email address', 'french-practice-hub' ); ?>" required>
                     <button type="submit"><?php esc_html_e( 'Subscribe', 'french-practice-hub' ); ?></button>
                 </form>
@@ -26,7 +28,7 @@
                     </div>
                     <div class="cta-button-group">
                         <h4><?php esc_html_e( 'Support Our Mission', 'french-practice-hub' ); ?></h4>
-                        <a href="#" class="donation-btn"><?php esc_html_e( 'Make a Donation', 'french-practice-hub' ); ?></a>
+                        <a href="<?php echo esc_url( home_url( '/donate/' ) ); ?>" class="donation-btn"><?php esc_html_e( 'Make a Donation', 'french-practice-hub' ); ?></a>
                     </div>
                 </div>
             </div>

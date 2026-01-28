@@ -3491,6 +3491,7 @@ body.translated-rtl {
     height: 30px;
     background-color: var(--border-color);
     border-radius: 30px;
+    border: none;
     cursor: pointer;
     transition: var(--transition);
     display: flex;

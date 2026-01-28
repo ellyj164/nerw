@@ -136,7 +136,7 @@
         
         <div class="header-actions">
             <!-- Dark Mode Toggle -->
-            <button class="dark-mode-toggle" id="dark-mode-toggle" aria-label="<?php esc_attr_e( 'Toggle dark mode', 'french-practice-hub' ); ?>">
+            <button class="dark-mode-toggle" id="dark-mode-toggle" type="button" aria-label="<?php esc_attr_e( 'Toggle dark mode', 'french-practice-hub' ); ?>" aria-pressed="false">
                 <div class="dark-mode-toggle-slider">
                     <span class="dark-mode-toggle-icon moon">🌙</span>
                     <span class="dark-mode-toggle-icon sun">☀️</span>
