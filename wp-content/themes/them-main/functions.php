@@ -1383,8 +1383,8 @@ add_action( 'wp_ajax_nopriv_fph_submit_booking', 'fph_handle_booking_submission'
  * Send booking notification email
  */
 function fph_send_booking_notification( $booking_data ) {
-    // Send to booking email as specified in requirements
-    $to = 'booking@frenchpracticehub.com';
+    // Get booking email from theme customizer, with fallback to default
+    $to = get_theme_mod( 'fph_booking_notification_email', 'booking@frenchpracticehub.com' );
     
     // Allow filtering of notification email
     $to = apply_filters( 'fph_booking_notification_email', $to );
@@ -1822,6 +1822,20 @@ function fph_newsletter_customizer( $wp_customize ) {
         'input_attrs' => array(
             'placeholder' => '[newsletter_subscribe] or custom shortcode',
         ),
+    ) );
+    
+    // Booking Email Setting
+    $wp_customize->add_setting( 'fph_booking_notification_email', array(
+        'default'           => 'booking@frenchpracticehub.com',
+        'sanitize_callback' => 'sanitize_email',
+        'transport'         => 'refresh',
+    ) );
+    
+    $wp_customize->add_control( 'fph_booking_notification_email', array(
+        'label'       => __( 'Booking Notification Email', 'french-practice-hub' ),
+        'description' => __( 'Email address to receive booking notifications. Default: booking@frenchpracticehub.com', 'french-practice-hub' ),
+        'section'     => 'fph_newsletter_settings',
+        'type'        => 'email',
     ) );
 }
 add_action( 'customize_register', 'fph_newsletter_customizer' );

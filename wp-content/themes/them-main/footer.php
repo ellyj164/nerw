@@ -12,7 +12,8 @@
                 if ( ! empty( $newsletter_shortcode ) ) {
                     // Use admin-configured newsletter plugin shortcode
                     echo '<div class="newsletter-plugin-wrapper">';
-                    echo do_shortcode( $newsletter_shortcode );
+                    // Shortcodes are already sanitized on save, but we filter output for security
+                    echo wp_kses_post( do_shortcode( $newsletter_shortcode ) );
                     echo '</div>';
                 } else {
                     // Default built-in newsletter form
@@ -23,9 +24,11 @@
                         <input type="email" name="newsletter_email" placeholder="<?php esc_attr_e( 'Enter your email address', 'french-practice-hub' ); ?>" required>
                         <button type="submit"><?php esc_html_e( 'Subscribe', 'french-practice-hub' ); ?></button>
                     </form>
-                    <p class="newsletter-admin-note" style="font-size: 0.85em; color: var(--text-secondary); margin-top: 10px;">
-                        <?php esc_html_e( 'Admin: To use a newsletter plugin (Mailchimp, Newsletter, etc.), go to Appearance > Customize > Newsletter Settings and add your shortcode.', 'french-practice-hub' ); ?>
-                    </p>
+                    <?php if ( current_user_can( 'manage_options' ) ) : ?>
+                        <p class="newsletter-admin-note admin-note">
+                            <?php esc_html_e( 'Admin: To use a newsletter plugin (Mailchimp, Newsletter, etc.), go to Appearance > Customize > Newsletter Settings and add your shortcode.', 'french-practice-hub' ); ?>
+                        </p>
+                    <?php endif; ?>
                     <?php
                 }
                 ?>
@@ -39,7 +42,7 @@
                 <div class="cta-buttons-container">
                     <div class="cta-button-group">
                         <h4><?php esc_html_e( 'Join Our Community', 'french-practice-hub' ); ?></h4>
-                        <p style="font-size: 0.9em; margin-bottom: 15px;"><?php esc_html_e( 'Select your level and join our mailing list', 'french-practice-hub' ); ?></p>
+                        <p class="cta-description"><?php esc_html_e( 'Select your level and join our mailing list', 'french-practice-hub' ); ?></p>
                         <?php
                         // Check if a join community plugin shortcode is defined
                         $join_community_shortcode = get_theme_mod( 'fph_join_community_shortcode', '' );
@@ -47,7 +50,8 @@
                         if ( ! empty( $join_community_shortcode ) ) {
                             // Use admin-configured plugin shortcode
                             echo '<div class="join-community-plugin-wrapper">';
-                            echo do_shortcode( $join_community_shortcode );
+                            // Shortcodes are already sanitized on save, but we filter output for security
+                            echo wp_kses_post( do_shortcode( $join_community_shortcode ) );
                             echo '</div>';
                         } else {
                             // Default community buttons
@@ -57,9 +61,11 @@
                                 <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A1 (Beginner)' ) ); ?>" class="community-btn">A1</a>
                                 <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A2 (Pre-Intermediate)' ) ); ?>" class="community-btn">A2</a>
                             </div>
-                            <p class="community-admin-note" style="font-size: 0.85em; color: var(--text-secondary); margin-top: 10px;">
-                                <?php esc_html_e( 'Admin: To integrate with a mailing list plugin, go to Appearance > Customize > Newsletter Settings and add your shortcode.', 'french-practice-hub' ); ?>
-                            </p>
+                            <?php if ( current_user_can( 'manage_options' ) ) : ?>
+                                <p class="community-admin-note admin-note">
+                                    <?php esc_html_e( 'Admin: To integrate with a mailing list plugin, go to Appearance > Customize > Newsletter Settings and add your shortcode.', 'french-practice-hub' ); ?>
+                                </p>
+                            <?php endif; ?>
                             <?php
                         }
                         ?>

@@ -2867,17 +2867,16 @@ body.translated-rtl {
         padding: 120px 20px;
     }
     
-    /* Mobile responsive video - Ensure video displays */
+    /* Mobile responsive video - Force display and ensure proper sizing */
     .hero-video {
         object-fit: cover;
         object-position: center center;
-        /* Force video to display on mobile */
         display: block !important;
         width: 100% !important;
         height: 100% !important;
-        /* Ensure video wrapper is visible */
     }
     
+    /* Ensure video wrapper is visible on mobile */
     .hero-video-wrapper {
         display: block !important;
         position: absolute !important;
@@ -3719,6 +3718,18 @@ body.dark-mode .cta-buttons-section {
 .donation-btn:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-lg);
+}
+
+/* Admin Notes Styling */
+.admin-note {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    margin-top: 10px;
+}
+
+.cta-description {
+    font-size: 0.9em;
+    margin-bottom: 15px;
 }
 
 /* ============================================
