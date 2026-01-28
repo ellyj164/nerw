@@ -177,7 +177,7 @@ button:focus-visible {
     z-index: 1000;
     box-shadow: var(--shadow-sm);
     transition: var(--transition-fast);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .header.scrolled {
