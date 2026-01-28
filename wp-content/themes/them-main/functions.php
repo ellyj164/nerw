@@ -1383,8 +1383,8 @@ add_action( 'wp_ajax_nopriv_fph_submit_booking', 'fph_handle_booking_submission'
  * Send booking notification email
  */
 function fph_send_booking_notification( $booking_data ) {
-    // Get admin email, with fallback
-    $to = get_option( 'admin_email', 'contact@frenchpracticehub.com' );
+    // Get booking email from theme customizer, with fallback to default
+    $to = get_theme_mod( 'fph_booking_notification_email', 'booking@frenchpracticehub.com' );
     
     // Allow filtering of notification email
     $to = apply_filters( 'fph_booking_notification_email', $to );
@@ -1778,3 +1778,64 @@ function fph_handle_newsletter_subscribe() {
 }
 add_action( 'admin_post_nopriv_newsletter_subscribe', 'fph_handle_newsletter_subscribe' );
 add_action( 'admin_post_newsletter_subscribe', 'fph_handle_newsletter_subscribe' );
+
+/**
+ * Add Newsletter Plugin Settings to Theme Customizer
+ */
+function fph_newsletter_customizer( $wp_customize ) {
+    // Add Newsletter Settings Section
+    $wp_customize->add_section( 'fph_newsletter_settings', array(
+        'title'       => __( 'Newsletter Settings', 'french-practice-hub' ),
+        'priority'    => 160,
+        'description' => __( 'Configure newsletter and join community plugin integration. Leave empty to use default forms.', 'french-practice-hub' ),
+    ) );
+    
+    // Newsletter Shortcode Setting
+    $wp_customize->add_setting( 'fph_newsletter_shortcode', array(
+        'default'           => '',
+        'sanitize_callback' => 'wp_kses_post',
+        'transport'         => 'refresh',
+    ) );
+    
+    $wp_customize->add_control( 'fph_newsletter_shortcode', array(
+        'label'       => __( 'Newsletter Plugin Shortcode', 'french-practice-hub' ),
+        'description' => __( 'Enter the shortcode for your newsletter plugin (e.g., [newsletter_form] or [mc4wp_form id="123"]). Leave empty to use the default form.', 'french-practice-hub' ),
+        'section'     => 'fph_newsletter_settings',
+        'type'        => 'textarea',
+        'input_attrs' => array(
+            'placeholder' => '[newsletter_form] or [mc4wp_form id="123"]',
+        ),
+    ) );
+    
+    // Join Community Shortcode Setting
+    $wp_customize->add_setting( 'fph_join_community_shortcode', array(
+        'default'           => '',
+        'sanitize_callback' => 'wp_kses_post',
+        'transport'         => 'refresh',
+    ) );
+    
+    $wp_customize->add_control( 'fph_join_community_shortcode', array(
+        'label'       => __( 'Join Community Plugin Shortcode', 'french-practice-hub' ),
+        'description' => __( 'Enter the shortcode for your mailing list subscription (e.g., [newsletter_subscribe] or custom form shortcode). Leave empty to use default buttons.', 'french-practice-hub' ),
+        'section'     => 'fph_newsletter_settings',
+        'type'        => 'textarea',
+        'input_attrs' => array(
+            'placeholder' => '[newsletter_subscribe] or custom shortcode',
+        ),
+    ) );
+    
+    // Booking Email Setting
+    $wp_customize->add_setting( 'fph_booking_notification_email', array(
+        'default'           => 'booking@frenchpracticehub.com',
+        'sanitize_callback' => 'sanitize_email',
+        'transport'         => 'refresh',
+    ) );
+    
+    $wp_customize->add_control( 'fph_booking_notification_email', array(
+        'label'       => __( 'Booking Notification Email', 'french-practice-hub' ),
+        'description' => __( 'Email address to receive booking notifications. Default: booking@frenchpracticehub.com', 'french-practice-hub' ),
+        'section'     => 'fph_newsletter_settings',
+        'type'        => 'email',
+    ) );
+}
+add_action( 'customize_register', 'fph_newsletter_customizer' );
