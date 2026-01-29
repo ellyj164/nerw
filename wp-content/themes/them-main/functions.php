@@ -2046,3 +2046,61 @@ function fph_newsletter_customizer( $wp_customize ) {
     ) );
 }
 add_action( 'customize_register', 'fph_newsletter_customizer' );
+
+/**
+ * Add Booking Calendar Settings to Theme Customizer
+ */
+function fph_booking_calendar_customizer( $wp_customize ) {
+    // Add Booking Calendar Settings Section
+    $wp_customize->add_section( 'fph_booking_settings', array(
+        'title'       => __( 'Booking Calendar Settings', 'french-practice-hub' ),
+        'priority'    => 165,
+        'description' => __( 'Configure the modern booking calendar appearance and instructor information.', 'french-practice-hub' ),
+    ) );
+    
+    // Instructor Name
+    $wp_customize->add_setting( 'fph_instructor_name', array(
+        'default'           => 'Fidele FLE',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport'         => 'refresh',
+    ) );
+    
+    $wp_customize->add_control( 'fph_instructor_name', array(
+        'label'       => __( 'Instructor Name', 'french-practice-hub' ),
+        'description' => __( 'Name displayed on the booking calendar.', 'french-practice-hub' ),
+        'section'     => 'fph_booking_settings',
+        'type'        => 'text',
+    ) );
+    
+    // Instructor Avatar/Photo
+    $wp_customize->add_setting( 'fph_instructor_avatar', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport'         => 'refresh',
+    ) );
+    
+    $wp_customize->add_control( new WP_Customize_Image_Control(
+        $wp_customize,
+        'fph_instructor_avatar',
+        array(
+            'label'       => __( 'Instructor Photo', 'french-practice-hub' ),
+            'description' => __( 'Upload an instructor photo (recommended: 300x300px square image). Leave empty to use default avatar.', 'french-practice-hub' ),
+            'section'     => 'fph_booking_settings',
+        )
+    ) );
+    
+    // Session Description
+    $wp_customize->add_setting( 'fph_session_description', array(
+        'default'           => __( 'Web conferencing details provided upon confirmation. Join us for an interactive French learning experience tailored to your level.', 'french-practice-hub' ),
+        'sanitize_callback' => 'sanitize_textarea_field',
+        'transport'         => 'refresh',
+    ) );
+    
+    $wp_customize->add_control( 'fph_session_description', array(
+        'label'       => __( 'Session Description', 'french-practice-hub' ),
+        'description' => __( 'Brief description shown on the booking calendar.', 'french-practice-hub' ),
+        'section'     => 'fph_booking_settings',
+        'type'        => 'textarea',
+    ) );
+}
+add_action( 'customize_register', 'fph_booking_calendar_customizer' );
