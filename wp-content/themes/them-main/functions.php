@@ -1270,7 +1270,7 @@ add_action( 'save_post_fph_booking', 'fph_save_booking_meta' );
  * Enqueue booking scripts and styles
  */
 function fph_enqueue_booking_scripts() {
-    // Only enqueue on booking page
+    // Old booking page
     if ( is_page_template( 'page-book-session.php' ) ) {
         wp_enqueue_style(
             'fph-booking',
@@ -1293,6 +1293,33 @@ function fph_enqueue_booking_scripts() {
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'nonce'   => wp_create_nonce( 'fph_booking_nonce' ),
+            )
+        );
+    }
+    
+    // Modern booking calendar page
+    if ( is_page_template( 'page-booking-calendar.php' ) ) {
+        wp_enqueue_style(
+            'fph-modern-booking',
+            get_template_directory_uri() . '/assets/css/modern-booking.css',
+            array(),
+            wp_get_theme()->get( 'Version' )
+        );
+
+        wp_enqueue_script(
+            'fph-modern-booking',
+            get_template_directory_uri() . '/assets/js/modern-booking.js',
+            array(),
+            wp_get_theme()->get( 'Version' ),
+            true
+        );
+
+        wp_localize_script(
+            'fph-modern-booking',
+            'fphBooking',
+            array(
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'nonce'   => wp_create_nonce( 'fph_modern_booking_nonce' ),
             )
         );
     }
@@ -1466,6 +1493,186 @@ function fph_get_booked_slots() {
     }
 
     return $booked_slots;
+}
+
+/**
+ * Handle modern booking form submission via AJAX
+ */
+function fph_handle_modern_booking_submission() {
+    // Verify nonce
+    if ( ! isset( $_POST['booking_nonce'] ) || ! wp_verify_nonce( $_POST['booking_nonce'], 'fph_modern_booking_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'french-practice-hub' ) ) );
+    }
+
+    // Sanitize and validate input
+    $booking_date = isset( $_POST['booking_date'] ) ? sanitize_text_field( $_POST['booking_date'] ) : '';
+    $booking_time = isset( $_POST['booking_time'] ) ? sanitize_text_field( $_POST['booking_time'] ) : '';
+    $booking_type = isset( $_POST['booking_type'] ) ? sanitize_text_field( $_POST['booking_type'] ) : '';
+    $booking_timezone = isset( $_POST['booking_timezone'] ) ? sanitize_text_field( $_POST['booking_timezone'] ) : 'Africa/Kigali';
+    $booking_name = isset( $_POST['booking_name'] ) ? sanitize_text_field( $_POST['booking_name'] ) : '';
+    $booking_email = isset( $_POST['booking_email'] ) ? sanitize_email( $_POST['booking_email'] ) : '';
+    $booking_phone = isset( $_POST['booking_phone'] ) ? sanitize_text_field( $_POST['booking_phone'] ) : '';
+    $booking_age = isset( $_POST['booking_student_age'] ) ? absint( $_POST['booking_student_age'] ) : '';
+    $booking_notes = isset( $_POST['booking_notes'] ) ? sanitize_textarea_field( $_POST['booking_notes'] ) : '';
+
+    // Validate required fields
+    if ( empty( $booking_date ) || empty( $booking_time ) || empty( $booking_name ) || empty( $booking_email ) || empty( $booking_phone ) ) {
+        wp_send_json_error( array( 'message' => __( 'Please fill in all required fields.', 'french-practice-hub' ) ) );
+    }
+
+    // Validate email
+    if ( ! is_email( $booking_email ) ) {
+        wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'french-practice-hub' ) ) );
+    }
+
+    // Format date for display
+    $date_obj = DateTime::createFromFormat( 'Y-m-d', $booking_date );
+    $formatted_date = $date_obj ? $date_obj->format( 'l, F j, Y' ) : $booking_date;
+
+    // Create booking post
+    $post_title = sprintf(
+        '%s - %s - %s',
+        $booking_name,
+        $formatted_date,
+        $booking_time
+    );
+
+    $post_data = array(
+        'post_title'  => $post_title,
+        'post_type'   => 'fph_booking',
+        'post_status' => 'publish',
+    );
+
+    $post_id = wp_insert_post( $post_data );
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_send_json_error( array( 'message' => __( 'Failed to create booking. Please try again.', 'french-practice-hub' ) ) );
+    }
+
+    // Save booking meta
+    update_post_meta( $post_id, '_booking_date', $booking_date );
+    update_post_meta( $post_id, '_booking_formatted_date', $formatted_date );
+    update_post_meta( $post_id, '_booking_time', $booking_time );
+    update_post_meta( $post_id, '_booking_type', $booking_type );
+    update_post_meta( $post_id, '_booking_timezone', $booking_timezone );
+    update_post_meta( $post_id, '_booking_name', $booking_name );
+    update_post_meta( $post_id, '_booking_email', $booking_email );
+    update_post_meta( $post_id, '_booking_phone', $booking_phone );
+    update_post_meta( $post_id, '_booking_age', $booking_age );
+    update_post_meta( $post_id, '_booking_notes', $booking_notes );
+    update_post_meta( $post_id, '_booking_status', 'pending' );
+
+    // Send email notification
+    $booking_data = array(
+        'date'         => $formatted_date,
+        'time'         => $booking_time,
+        'session_type' => ucfirst( $booking_type ),
+        'timezone'     => $booking_timezone,
+        'name'         => $booking_name,
+        'email'        => $booking_email,
+        'phone'        => $booking_phone,
+        'age'          => $booking_age,
+        'notes'        => $booking_notes,
+        'booking_id'   => $post_id,
+    );
+
+    fph_send_modern_booking_notification( $booking_data );
+
+    wp_send_json_success( array( 'message' => __( 'Booking confirmed! Check your email for confirmation details.', 'french-practice-hub' ) ) );
+}
+add_action( 'wp_ajax_fph_submit_modern_booking', 'fph_handle_modern_booking_submission' );
+add_action( 'wp_ajax_nopriv_fph_submit_modern_booking', 'fph_handle_modern_booking_submission' );
+
+/**
+ * Send modern booking notification email
+ */
+function fph_send_modern_booking_notification( $booking_data ) {
+    // Get booking email from theme customizer
+    $admin_email = get_theme_mod( 'fph_booking_notification_email', 'booking@frenchpracticehub.com' );
+    $admin_email = apply_filters( 'fph_booking_notification_email', $admin_email );
+    
+    $subject = sprintf(
+        __( 'New Session Booking - %s at %s', 'french-practice-hub' ),
+        $booking_data['date'],
+        $booking_data['time']
+    );
+
+    $admin_url = admin_url( 'post.php?post=' . $booking_data['booking_id'] . '&action=edit' );
+
+    // Email to admin
+    $admin_message = '
+    <html>
+    <head>
+        <style>
+            body { font-family: Nunito, Arial, sans-serif; line-height: 1.6; color: #1F1F1F; }
+            h2 { color: #0056D2; }
+            table { border-collapse: collapse; width: 100%; max-width: 600px; margin: 20px 0; }
+            td { padding: 12px 8px; border-bottom: 1px solid #E8EAED; }
+            td:first-child { font-weight: 600; width: 150px; }
+            .button { display: inline-block; padding: 12px 24px; background: #0056D2; color: #ffffff; text-decoration: none; border-radius: 8px; margin-top: 20px; }
+        </style>
+    </head>
+    <body>
+        <h2>' . esc_html__( 'New Session Booking Request', 'french-practice-hub' ) . '</h2>
+        <table>
+            <tr><td>' . esc_html__( 'Date:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['date'] ) . '</td></tr>
+            <tr><td>' . esc_html__( 'Time:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['time'] ) . '</td></tr>
+            <tr><td>' . esc_html__( 'Timezone:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['timezone'] ) . '</td></tr>
+            <tr><td>' . esc_html__( 'Session Type:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['session_type'] ) . '</td></tr>
+            <tr><td>' . esc_html__( 'Name:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['name'] ) . '</td></tr>
+            <tr><td>' . esc_html__( 'Email:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['email'] ) . '</td></tr>
+            <tr><td>' . esc_html__( 'Phone:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['phone'] ) . '</td></tr>';
+    
+    if ( ! empty( $booking_data['age'] ) ) {
+        $admin_message .= '<tr><td>' . esc_html__( 'Student Age:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['age'] ) . '</td></tr>';
+    }
+    
+    if ( ! empty( $booking_data['notes'] ) ) {
+        $admin_message .= '<tr><td>' . esc_html__( 'Notes:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['notes'] ) . '</td></tr>';
+    }
+    
+    $admin_message .= '</table>
+        <a href="' . esc_url( $admin_url ) . '" class="button">' . esc_html__( 'View in Admin', 'french-practice-hub' ) . '</a>
+    </body>
+    </html>';
+
+    $headers = array( 'Content-Type: text/html; charset=UTF-8' );
+    wp_mail( $admin_email, $subject, $admin_message, $headers );
+
+    // Email to customer
+    $customer_subject = __( 'Booking Confirmation - French Practice Hub', 'french-practice-hub' );
+    $customer_message = '
+    <html>
+    <head>
+        <style>
+            body { font-family: Nunito, Arial, sans-serif; line-height: 1.6; color: #1F1F1F; }
+            h2 { color: #0056D2; }
+            .booking-details { background: #F8F9FA; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            table { border-collapse: collapse; width: 100%; }
+            td { padding: 10px 0; }
+            td:first-child { font-weight: 600; width: 150px; }
+        </style>
+    </head>
+    <body>
+        <h2>' . esc_html__( 'Booking Confirmation', 'french-practice-hub' ) . '</h2>
+        <p>' . esc_html__( 'Dear', 'french-practice-hub' ) . ' ' . esc_html( $booking_data['name'] ) . ',</p>
+        <p>' . esc_html__( 'Thank you for booking a session with French Practice Hub! Your booking has been confirmed.', 'french-practice-hub' ) . '</p>
+        <div class="booking-details">
+            <h3>' . esc_html__( 'Session Details', 'french-practice-hub' ) . '</h3>
+            <table>
+                <tr><td>' . esc_html__( 'Date:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['date'] ) . '</td></tr>
+                <tr><td>' . esc_html__( 'Time:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['time'] ) . ' (' . esc_html( $booking_data['timezone'] ) . ')</td></tr>
+                <tr><td>' . esc_html__( 'Session Type:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['session_type'] ) . '</td></tr>
+            </table>
+        </div>
+        <p>' . esc_html__( 'We will send you the video conferencing details closer to your session time.', 'french-practice-hub' ) . '</p>
+        <p>' . esc_html__( 'If you need to reschedule or have any questions, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:booking@frenchpracticehub.com">booking@frenchpracticehub.com</a></p>
+        <p>' . esc_html__( 'We look forward to seeing you!', 'french-practice-hub' ) . '</p>
+        <p><strong>French Practice Hub Team</strong></p>
+    </body>
+    </html>';
+
+    wp_mail( $booking_data['email'], $customer_subject, $customer_message, $headers );
 }
 
 /**
