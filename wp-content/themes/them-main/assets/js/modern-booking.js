@@ -43,6 +43,7 @@
     let selectedDate = null;
     let selectedTime = null;
     let selectedType = null;
+    let bookedSlots = {}; // Cache of booked slots: 'YYYY-MM-DD-HH:MM' => true
 
     // DOM Elements
     const currentMonthEl = document.getElementById('current-month');
@@ -58,6 +59,27 @@
     const closeModalBtn = modal ? modal.querySelector('.booking-modal-close') : null;
     const cancelBookingBtn = document.getElementById('cancel-modern-booking');
     const bookingForm = document.getElementById('modern-booking-form');
+    
+    // Fetch booked slots for a specific date
+    function fetchBookedSlots(date) {
+        const dateStr = date.toISOString().split('T')[0];
+        
+        // Skip if already cached
+        if (bookedSlots[dateStr]) {
+            return Promise.resolve();
+        }
+        
+        // In a real implementation, fetch from server
+        // For now, return empty (server-side validation handles conflicts)
+        return Promise.resolve();
+    }
+    
+    // Check if a slot is booked
+    function isSlotBooked(date, time) {
+        const dateStr = date.toISOString().split('T')[0];
+        const slotKey = `${dateStr}-${time}`;
+        return bookedSlots[slotKey] === true;
+    }
 
     // Initialize
     function init() {
@@ -231,32 +253,25 @@
         
         // Get day of week
         const dayOfWeek = date.getDay();
-        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6); // Sunday=0, Saturday=6
+        const isWeekday = !isWeekend;
         
         // Generate all available time slots
         const allSlots = [];
         
-        // Kids sessions
+        // Kids sessions - available all week
         AVAILABILITY_SCHEDULE.kids.forEach(session => {
             const slots = generateTimeSlots(session.start, session.end);
             slots.forEach(time => {
-                // Weekdays: all days, Weekends: limited
-                const available = !isWeekend || (dayOfWeek === 6 || dayOfWeek === 0);
-                if (available) {
-                    allSlots.push({ time, type: 'kids', start: session.start, end: session.end });
-                }
+                allSlots.push({ time, type: 'kids', start: session.start, end: session.end });
             });
         });
         
-        // Adults sessions
+        // Adults sessions - available all week
         AVAILABILITY_SCHEDULE.adults.forEach(session => {
             const slots = generateTimeSlots(session.start, session.end);
             slots.forEach(time => {
-                // Weekdays: Mon-Fri, Weekends: limited
-                const available = !isWeekend || (dayOfWeek === 6 || dayOfWeek === 0);
-                if (available) {
-                    allSlots.push({ time, type: 'adults', start: session.start, end: session.end });
-                }
+                allSlots.push({ time, type: 'adults', start: session.start, end: session.end });
             });
         });
         
@@ -286,12 +301,18 @@
         } else {
             uniqueSlots.forEach(slot => {
                 const slotEl = document.createElement('div');
-                slotEl.className = 'timeslot';
+                const isBooked = isSlotBooked(date, slot.time);
+                
+                slotEl.className = isBooked ? 'timeslot booked' : 'timeslot';
                 slotEl.innerHTML = `
                     ${slot.time}
                     <span class="timeslot-badge ${slot.type}">${slot.type}</span>
                 `;
-                slotEl.addEventListener('click', () => selectTimeSlot(slot, date));
+                
+                if (!isBooked) {
+                    slotEl.addEventListener('click', () => selectTimeSlot(slot, date));
+                }
+                
                 timeslotsContainer.appendChild(slotEl);
             });
         }
@@ -299,6 +320,12 @@
 
     // Select Time Slot
     function selectTimeSlot(slot, date) {
+        // Defensive check
+        if (!slot || !date) {
+            console.error('Invalid slot or date selection');
+            return;
+        }
+        
         selectedTime = slot.time;
         selectedType = slot.type;
         

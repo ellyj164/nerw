@@ -1525,6 +1525,33 @@ function fph_handle_modern_booking_submission() {
         wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'french-practice-hub' ) ) );
     }
 
+    // Check for double-booking
+    $existing_bookings = new WP_Query( array(
+        'post_type'   => 'fph_booking',
+        'post_status' => 'publish',
+        'meta_query'  => array(
+            'relation' => 'AND',
+            array(
+                'key'   => '_booking_date',
+                'value' => $booking_date,
+            ),
+            array(
+                'key'   => '_booking_time',
+                'value' => $booking_time,
+            ),
+            array(
+                'key'   => '_booking_status',
+                'value' => 'cancelled',
+                'compare' => '!=',
+            ),
+        ),
+    ) );
+
+    if ( $existing_bookings->have_posts() ) {
+        wp_send_json_error( array( 'message' => __( 'Sorry, this time slot has already been booked. Please select a different time.', 'french-practice-hub' ) ) );
+    }
+    wp_reset_postdata();
+
     // Format date for display
     $date_obj = DateTime::createFromFormat( 'Y-m-d', $booking_date );
     $formatted_date = $date_obj ? $date_obj->format( 'l, F j, Y' ) : $booking_date;
@@ -1637,10 +1664,11 @@ function fph_send_modern_booking_notification( $booking_data ) {
     </html>';
 
     $headers = array( 'Content-Type: text/html; charset=UTF-8' );
-    wp_mail( $admin_email, $subject, $admin_message, $headers );
+    $admin_email_sent = wp_mail( $admin_email, $subject, $admin_message, $headers );
 
     // Email to customer
     $customer_subject = __( 'Booking Confirmation - French Practice Hub', 'french-practice-hub' );
+    $support_email = get_theme_mod( 'fph_booking_notification_email', 'booking@frenchpracticehub.com' );
     $customer_message = '
     <html>
     <head>
@@ -1666,13 +1694,25 @@ function fph_send_modern_booking_notification( $booking_data ) {
             </table>
         </div>
         <p>' . esc_html__( 'We will send you the video conferencing details closer to your session time.', 'french-practice-hub' ) . '</p>
-        <p>' . esc_html__( 'If you need to reschedule or have any questions, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:booking@frenchpracticehub.com">booking@frenchpracticehub.com</a></p>
+        <p>' . esc_html__( 'If you need to reschedule or have any questions, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:' . esc_attr( $support_email ) . '">' . esc_html( $support_email ) . '</a></p>
         <p>' . esc_html__( 'We look forward to seeing you!', 'french-practice-hub' ) . '</p>
         <p><strong>French Practice Hub Team</strong></p>
     </body>
     </html>';
 
-    wp_mail( $booking_data['email'], $customer_subject, $customer_message, $headers );
+    $customer_email_sent = wp_mail( $booking_data['email'], $customer_subject, $customer_message, $headers );
+    
+    // Log email failures (optional - for debugging)
+    if ( ! $admin_email_sent || ! $customer_email_sent ) {
+        error_log( sprintf( 
+            'Booking email failure for booking ID %d: Admin sent: %s, Customer sent: %s',
+            $booking_data['booking_id'],
+            $admin_email_sent ? 'Yes' : 'No',
+            $customer_email_sent ? 'Yes' : 'No'
+        ) );
+    }
+    
+    return $admin_email_sent && $customer_email_sent;
 }
 
 /**
@@ -2101,6 +2141,20 @@ function fph_booking_calendar_customizer( $wp_customize ) {
         'description' => __( 'Brief description shown on the booking calendar.', 'french-practice-hub' ),
         'section'     => 'fph_booking_settings',
         'type'        => 'textarea',
+    ) );
+    
+    // Booking Notification Email
+    $wp_customize->add_setting( 'fph_booking_notification_email', array(
+        'default'           => 'booking@frenchpracticehub.com',
+        'sanitize_callback' => 'sanitize_email',
+        'transport'         => 'refresh',
+    ) );
+    
+    $wp_customize->add_control( 'fph_booking_notification_email', array(
+        'label'       => __( 'Booking Notification Email', 'french-practice-hub' ),
+        'description' => __( 'Email address to receive booking notifications.', 'french-practice-hub' ),
+        'section'     => 'fph_booking_settings',
+        'type'        => 'email',
     ) );
 }
 add_action( 'customize_register', 'fph_booking_calendar_customizer' );
