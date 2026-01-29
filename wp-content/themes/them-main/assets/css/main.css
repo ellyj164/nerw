@@ -2787,6 +2787,14 @@ body.translated-rtl {
         gap: 20px;
     }
     
+    /* Ensure Google Translate widget and dark mode toggle stay visible on mobile */
+    .google-translate-widget,
+    #google_translate_widget_container,
+    .dark-mode-toggle {
+        display: flex !important;
+        visibility: visible !important;
+    }
+    
     /* Make language switcher more compact on tablet */
     .language-switcher {
         display: flex;

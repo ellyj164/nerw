@@ -15,9 +15,18 @@ get_header();
         <div class="booking-instructor-panel">
             <div class="instructor-avatar">
                 <?php
-                $instructor_avatar = get_theme_mod('fph_instructor_avatar', get_template_directory_uri() . '/assets/images/instructor-avatar.jpg');
+                $instructor_avatar = get_theme_mod('fph_instructor_avatar', '');
+                if ( ! empty( $instructor_avatar ) ) {
+                    echo '<img src="' . esc_url( $instructor_avatar ) . '" alt="' . esc_attr__('Instructor', 'french-practice-hub') . '">';
+                } else {
+                    // SVG placeholder
+                    echo '<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="60" cy="60" r="60" fill="#E8F0FE"/>
+                        <circle cx="60" cy="45" r="20" fill="#0056D2"/>
+                        <path d="M30 95C30 78 43 65 60 65C77 65 90 78 90 95" fill="#0056D2"/>
+                    </svg>';
+                }
                 ?>
-                <img src="<?php echo esc_url($instructor_avatar); ?>" alt="<?php esc_attr_e('Instructor', 'french-practice-hub'); ?>">
             </div>
             
             <h3 class="instructor-name"><?php echo esc_html(get_theme_mod('fph_instructor_name', 'Fidele FLE')); ?></h3>

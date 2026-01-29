@@ -137,7 +137,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo esc_url(home_url('/book-session/')); ?>">
+                            <a href="<?php echo esc_url(home_url('/booking-calendar/')); ?>">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                                     <line x1="16" y1="2" x2="16" y2="6"/>
