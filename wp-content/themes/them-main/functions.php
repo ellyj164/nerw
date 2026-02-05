@@ -765,6 +765,11 @@ function french_practice_hub_activation() {
             'template' => 'page-book-session.php',
             'content'  => '',
         ),
+        'booking-calendar' => array(
+            'title'    => 'Booking Calendar',
+            'template' => 'page-booking-calendar.php',
+            'content'  => '',
+        ),
     );
 
     $created_pages = array();
