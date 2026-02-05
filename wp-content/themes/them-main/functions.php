@@ -997,13 +997,13 @@ add_action( 'after_switch_theme', 'french_practice_hub_activation' );
  * Uses a transient to avoid repeated checks (resets if page is deleted)
  */
 function french_practice_hub_ensure_booking_calendar_page() {
-    // Check if page already exists
-    $page_check = get_page_by_path( 'booking-calendar' );
-    
-    // If page exists and we've already verified it, skip further checks
-    if ( $page_check && get_transient( 'fph_booking_calendar_page_checked' ) ) {
+    // If we've already verified the page exists recently, skip the check
+    if ( get_transient( 'fph_booking_calendar_page_checked' ) ) {
         return;
     }
+    
+    // Check if page already exists
+    $page_check = get_page_by_path( 'booking-calendar' );
     
     if ( ! $page_check ) {
         // Create the booking-calendar page
