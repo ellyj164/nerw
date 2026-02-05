@@ -996,6 +996,11 @@ add_action( 'after_switch_theme', 'french_practice_hub_activation' );
  * This function checks if the booking-calendar page exists and creates it if missing
  */
 function french_practice_hub_ensure_booking_calendar_page() {
+    // Check if we've already verified the page exists (using a transient to avoid repeated checks)
+    if ( get_transient( 'fph_booking_calendar_page_checked' ) ) {
+        return;
+    }
+    
     // Check if page already exists
     $page_check = get_page_by_path( 'booking-calendar' );
     
@@ -1016,6 +1021,9 @@ function french_practice_hub_ensure_booking_calendar_page() {
             update_post_meta( $page_id, '_wp_page_template', 'page-booking-calendar.php' );
         }
     }
+    
+    // Set a transient to avoid checking again for 1 day
+    set_transient( 'fph_booking_calendar_page_checked', true, DAY_IN_SECONDS );
 }
 // Run on admin_init to ensure the page is created if missing
 add_action( 'admin_init', 'french_practice_hub_ensure_booking_calendar_page' );
