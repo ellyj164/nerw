@@ -992,6 +992,35 @@ function french_practice_hub_activation() {
 add_action( 'after_switch_theme', 'french_practice_hub_activation' );
 
 /**
+ * Ensure booking-calendar page exists
+ * This function checks if the booking-calendar page exists and creates it if missing
+ */
+function french_practice_hub_ensure_booking_calendar_page() {
+    // Check if page already exists
+    $page_check = get_page_by_path( 'booking-calendar' );
+    
+    if ( ! $page_check ) {
+        // Create the booking-calendar page
+        $page_id = wp_insert_post( array(
+            'post_title'     => 'Booking Calendar',
+            'post_name'      => 'booking-calendar',
+            'post_content'   => '',
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+            'ping_status'    => 'closed',
+        ) );
+        
+        // Set page template
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', 'page-booking-calendar.php' );
+        }
+    }
+}
+// Run on admin_init to ensure the page is created if missing
+add_action( 'admin_init', 'french_practice_hub_ensure_booking_calendar_page' );
+
+/**
  * Create footer menus
  */
 function french_practice_hub_create_footer_menus( $created_pages, $created_categories, $categories ) {
