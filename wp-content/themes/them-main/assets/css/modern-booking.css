@@ -335,6 +335,16 @@
     text-transform: uppercase;
 }
 
+.timeslot-badge.available {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+.timeslot-badge.booked {
+    background-color: #FFEBEE;
+    color: #C62828;
+}
+
 .timeslot-badge.kids {
     background-color: #FFF3E0;
     color: #E65100;
