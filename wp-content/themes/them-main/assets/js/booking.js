@@ -31,6 +31,7 @@
                 document.getElementById('booking-type').value = capitalizeFirst(type);
 
                 // Show/hide student age field based on session type
+                // Since we now use 'general' type, hide the student age field
                 if (type === 'kids') {
                     studentAgeGroup.style.display = 'block';
                     document.getElementById('booking-age').setAttribute('required', 'required');
