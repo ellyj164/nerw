@@ -41,22 +41,23 @@ get_header();
                     <tbody>
                         <?php
                         // Define time slots based on the problem statement
+                        // Format: 'time' => display time, 'type' => slot type, 'days' => array of 7 days (Mon-Sun, 1=available, 0=not available)
                         $time_slots = array(
-                            array( 'time' => 'Kid 06:00-07:30', 'type' => 'kids', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ),
-                            array( 'time' => 'Kid 06:30-08:00', 'type' => 'kids', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ),
-                            array( 'time' => 'Adult 05:30-07:30', 'type' => 'adults', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ),
-                            array( 'time' => 'Kids 08:00-09:30', 'type' => 'kids', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ),
-                            array( 'time' => 'Adults 08:00-10:00', 'type' => 'adults', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ),
-                            array( 'time' => 'Kids 11:00-12:30', 'type' => 'kids', 'days' => array( 0, 0, 0, 0, 0, 0, 0 ) ),
-                            array( 'time' => 'Adults 11:00-13:00', 'type' => 'adults', 'days' => array( 0, 0, 0, 0, 0, 0, 0 ) ),
-                            array( 'time' => 'Kids 14:00-15:30', 'type' => 'kids', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ),
-                            array( 'time' => 'Adults 14:00-16:00', 'type' => 'adults', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ),
-                            array( 'time' => 'PAUSE 16:00-17:00', 'type' => 'pause', 'days' => array( 1, 1, 1, 1, 1, 1, 1 ) ),
-                            array( 'time' => 'Kids 17:00-18:30', 'type' => 'kids', 'days' => array( 0, 0, 0, 0, 0, 0, 0 ) ),
-                            array( 'time' => 'Adults 17:00-19:00', 'type' => 'adults', 'days' => array( 0, 0, 0, 0, 0, 0, 0 ) ),
-                            array( 'time' => 'Kids 19:15-20:45', 'type' => 'kids', 'days' => array( 1, 1, 1, 1, 1, 1, 1 ) ),
-                            array( 'time' => 'Kids 19:30-21:00', 'type' => 'kids', 'days' => array( 1, 1, 1, 1, 1, 1, 1 ) ),
-                            array( 'time' => 'Adults 19:30-21:30', 'type' => 'adults', 'days' => array( 1, 1, 1, 1, 1, 1, 1 ) ),
+                            // All days: 05:30-07:30 in 30-min slots
+                            array( 'time' => '05:30-06:00', 'type' => 'general', 'days' => array( 1, 1, 1, 1, 1, 1, 1 ) ), // Mon-Sun
+                            array( 'time' => '06:00-06:30', 'type' => 'general', 'days' => array( 1, 1, 1, 1, 1, 1, 1 ) ), // Mon-Sun
+                            array( 'time' => '06:30-07:00', 'type' => 'general', 'days' => array( 1, 1, 1, 1, 1, 1, 1 ) ), // Mon-Sun
+                            array( 'time' => '07:00-07:30', 'type' => 'general', 'days' => array( 1, 1, 1, 1, 1, 1, 1 ) ), // Mon-Sun
+                            // Weekend only: 08:00-10:00 in 30-min slots
+                            array( 'time' => '08:00-08:30', 'type' => 'general', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ), // Sat-Sun
+                            array( 'time' => '08:30-09:00', 'type' => 'general', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ), // Sat-Sun
+                            array( 'time' => '09:00-09:30', 'type' => 'general', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ), // Sat-Sun
+                            array( 'time' => '09:30-10:00', 'type' => 'general', 'days' => array( 0, 0, 0, 0, 0, 1, 1 ) ), // Sat-Sun
+                            // Mixed availability slots
+                            array( 'time' => '19:30-20:00', 'type' => 'general', 'days' => array( 1, 1, 0, 1, 0, 1, 1 ) ), // Mon, Tue, Thu, Sat, Sun
+                            array( 'time' => '20:00-20:30', 'type' => 'general', 'days' => array( 1, 1, 0, 1, 0, 1, 1 ) ), // Mon, Tue, Thu, Sat, Sun
+                            array( 'time' => '20:30-21:00', 'type' => 'general', 'days' => array( 1, 1, 0, 0, 0, 1, 1 ) ), // Mon, Tue, Sat, Sun
+                            array( 'time' => '21:00-21:30', 'type' => 'general', 'days' => array( 1, 1, 1, 1, 0, 1, 1 ) ), // Mon, Tue, Wed, Thu, Sat, Sun
                         );
 
                         // Get booked slots from database
@@ -77,11 +78,7 @@ get_header();
                                     $slot_key = $day_name . '_' . sanitize_title( $slot_time );
                                     $is_booked = isset( $booked_slots[ $slot_key ] ) && $booked_slots[ $slot_key ];
                                     
-                                    if ( $slot_type === 'pause' ) :
-                                        ?>
-                                        <td class="slot-pause">-</td>
-                                        <?php
-                                    elseif ( $is_booked ) :
+                                    if ( $is_booked ) :
                                         ?>
                                         <td class="slot-booked" title="<?php esc_attr_e( 'Already Booked', 'french-practice-hub' ); ?>">
                                             <?php esc_html_e( 'Booked', 'french-practice-hub' ); ?>
@@ -126,10 +123,6 @@ get_header();
                     <div class="legend-item">
                         <span class="legend-color slot-booked"><?php esc_html_e( 'Booked', 'french-practice-hub' ); ?></span>
                         <span><?php esc_html_e( 'Already Booked', 'french-practice-hub' ); ?></span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="legend-color slot-pause">-</span>
-                        <span><?php esc_html_e( 'Break Time', 'french-practice-hub' ); ?></span>
                     </div>
                 </div>
             </div>
@@ -190,7 +183,7 @@ get_header();
             
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" id="cancel-booking"><?php esc_html_e( 'Cancel', 'french-practice-hub' ); ?></button>
-                <button type="submit" class="btn btn-primary"><?php esc_html_e( 'Submit Booking', 'french-practice-hub' ); ?></button>
+                <button type="submit" class="btn btn-primary"><?php esc_html_e( 'Confirm Booking', 'french-practice-hub' ); ?></button>
             </div>
             
             <div id="booking-message" class="booking-message" style="display: none;"></div>
