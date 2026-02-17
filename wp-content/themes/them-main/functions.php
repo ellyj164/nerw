@@ -1793,9 +1793,9 @@ function fph_send_modern_booking_notification( $booking_data ) {
     $headers = array( 'Content-Type: text/html; charset=UTF-8' );
     $admin_email_sent = wp_mail( $admin_email, $subject, $admin_message, $headers );
 
-    // Email to customer
-    $customer_subject = __( 'Booking Confirmation - French Practice Hub', 'french-practice-hub' );
-    $support_email = get_theme_mod( 'fph_booking_notification_email', 'booking@frenchpracticehub.com' );
+    // Email to customer - Pending confirmation
+    $customer_subject = __( 'Booking Request Received - French Practice Hub', 'french-practice-hub' );
+    $support_email = get_theme_mod( 'fph_booking_notification_email', 'contact@frenchpracticehub.com' );
     $customer_message = '
     <html>
     <head>
@@ -1806,23 +1806,30 @@ function fph_send_modern_booking_notification( $booking_data ) {
             table { border-collapse: collapse; width: 100%; }
             td { padding: 10px 0; }
             td:first-child { font-weight: 600; width: 150px; }
+            .notice { background: #FEF3C7; padding: 15px; border-left: 4px solid #F59E0B; border-radius: 4px; margin: 20px 0; }
         </style>
     </head>
     <body>
-        <h2>' . esc_html__( 'Booking Confirmation', 'french-practice-hub' ) . '</h2>
+        <h2>' . esc_html__( 'Booking Request Received', 'french-practice-hub' ) . '</h2>
         <p>' . esc_html__( 'Dear', 'french-practice-hub' ) . ' ' . esc_html( $booking_data['name'] ) . ',</p>
-        <p>' . esc_html__( 'Thank you for booking a session with French Practice Hub! Your booking has been confirmed.', 'french-practice-hub' ) . '</p>
+        <p>' . esc_html__( 'Thank you for requesting a booking with French Practice Hub! We have received your booking request and it is now pending confirmation.', 'french-practice-hub' ) . '</p>
+        
+        <div class="notice">
+            <p><strong>' . esc_html__( 'Important:', 'french-practice-hub' ) . '</strong> ' . esc_html__( 'Your booking is pending confirmation. We will review your request and get back to you shortly with confirmation details.', 'french-practice-hub' ) . '</p>
+        </div>
+        
         <div class="booking-details">
-            <h3>' . esc_html__( 'Session Details', 'french-practice-hub' ) . '</h3>
+            <h3>' . esc_html__( 'Your Booking Request Details', 'french-practice-hub' ) . '</h3>
             <table>
                 <tr><td>' . esc_html__( 'Date:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['date'] ) . '</td></tr>
                 <tr><td>' . esc_html__( 'Time:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['time'] ) . ' (' . esc_html( $booking_data['timezone'] ) . ')</td></tr>
                 <tr><td>' . esc_html__( 'Session Type:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['session_type'] ) . '</td></tr>
             </table>
         </div>
-        <p>' . esc_html__( 'We will send you the video conferencing details closer to your session time.', 'french-practice-hub' ) . '</p>
-        <p>' . esc_html__( 'If you need to reschedule or have any questions, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:' . esc_attr( $support_email ) . '">' . esc_html( $support_email ) . '</a></p>
-        <p>' . esc_html__( 'We look forward to seeing you!', 'french-practice-hub' ) . '</p>
+        
+        <p>' . esc_html__( 'Once your booking is confirmed, we will send you the video conferencing details and any additional information you may need.', 'french-practice-hub' ) . '</p>
+        <p>' . esc_html__( 'If you have any questions or need to make changes to your booking request, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:' . esc_attr( $support_email ) . '">' . esc_html( $support_email ) . '</a></p>
+        <p>' . esc_html__( 'We look forward to helping you on your French learning journey!', 'french-practice-hub' ) . '</p>
         <p><strong>French Practice Hub Team</strong></p>
     </body>
     </html>';
