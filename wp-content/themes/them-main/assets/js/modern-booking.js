@@ -25,8 +25,8 @@
         mixed: [
             { start: '19:30', end: '20:00', days: [1, 2, 4, 6, 0] }, // Mon, Tue, Thu, Sat, Sun
             { start: '20:00', end: '20:30', days: [1, 2, 4, 6, 0] }, // Mon, Tue, Thu, Sat, Sun
-            { start: '20:30', end: '21:00', days: [1, 2, 6, 0] },    // Mon, Tue, Sat, Sun
-            { start: '21:00', end: '21:30', days: [1, 2, 3, 4, 6, 0] } // Mon, Tue, Wed, Thu, Sat, Sun
+            { start: '20:30', end: '21:00', days: [1, 2, 4, 5, 6, 0] }, // Mon, Tue, Thu, Fri, Sat, Sun
+            { start: '21:00', end: '21:30', days: [1, 2, 4, 6, 0] } // Mon, Tue, Thu, Sat, Sun
         ]
     };
 
