@@ -163,12 +163,11 @@
 
     // Update session duration in left panel
     function updateSessionDuration(duration) {
-        const sessionDetailSpans = document.querySelectorAll('.session-detail span');
-        sessionDetailSpans.forEach(span => {
-            if (span.textContent.includes('minutes') || span.textContent.includes('hour')) {
-                span.textContent = duration;
-            }
-        });
+        const durationDisplay = document.getElementById('session-duration-display');
+        if (durationDisplay) {
+            durationDisplay.textContent = duration;
+            durationDisplay.setAttribute('data-duration', duration);
+        }
     }
 
     // Render Calendar

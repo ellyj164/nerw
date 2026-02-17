@@ -1395,8 +1395,9 @@ function fph_enqueue_booking_scripts() {
             'fph-donate',
             'fphDonation',
             array(
-                'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                'nonce'   => wp_create_nonce( 'fph_donation_nonce' ),
+                'ajaxurl'          => admin_url( 'admin-ajax.php' ),
+                'nonce'            => wp_create_nonce( 'fph_donation_nonce' ),
+                'paypalMeUsername' => get_option( 'fph_paypal_me_username', 'frenchpracticehub' ),
             )
         );
     }
@@ -1827,7 +1828,7 @@ function fph_send_modern_booking_notification( $booking_data ) {
 
     // Email to customer - Pending confirmation
     $customer_subject = __( 'Booking Request Received - French Practice Hub', 'french-practice-hub' );
-    $support_email = get_theme_mod( 'fph_booking_notification_email', 'contact@frenchpracticehub.com' );
+    $contact_email = get_theme_mod( 'fph_booking_notification_email', 'contact@frenchpracticehub.com' );
     $customer_message = '
     <html>
     <head>
@@ -1860,7 +1861,7 @@ function fph_send_modern_booking_notification( $booking_data ) {
         </div>
         
         <p>' . esc_html__( 'Once your booking is confirmed, we will send you the video conferencing details and any additional information you may need.', 'french-practice-hub' ) . '</p>
-        <p>' . esc_html__( 'If you have any questions or need to make changes to your booking request, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:' . esc_attr( $support_email ) . '">' . esc_html( $support_email ) . '</a></p>
+        <p>' . esc_html__( 'If you have any questions or need to make changes to your booking request, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:' . esc_attr( $contact_email ) . '">' . esc_html( $contact_email ) . '</a></p>
         <p>' . esc_html__( 'We look forward to helping you on your French learning journey!', 'french-practice-hub' ) . '</p>
         <p><strong>French Practice Hub Team</strong></p>
     </body>

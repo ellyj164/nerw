@@ -128,7 +128,7 @@
         e.preventDefault();
         
         if (selectedAmount <= 0) {
-            alert('Please select or enter a donation amount.');
+            showErrorMessage('Please select or enter a donation amount.');
             return;
         }
 
@@ -138,6 +138,28 @@
 
         // Detect payment method and process
         detectPaymentMethodAndProcess();
+    }
+    
+    // Show Error Message
+    function showErrorMessage(message) {
+        if (selectedAmountDisplay) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'donation-error-message';
+            errorDiv.style.cssText = 'background: #FEE2E2; border-left: 4px solid #DC2626; padding: 15px; border-radius: 8px; margin: 15px 0; color: #991B1B;';
+            errorDiv.textContent = message;
+            
+            // Remove existing error messages
+            const existingError = donationForm.querySelector('.donation-error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Insert before proceed button
+            proceedButton.parentNode.insertBefore(errorDiv, proceedButton);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
     }
 
     // Detect Payment Method and Process
@@ -204,13 +226,14 @@
                 // Redirect to checkout
                 window.location.href = data.data.checkout_url;
             } else {
-                alert('Error processing donation. Please try again.');
+                const errorMsg = data.data && data.data.message ? data.data.message : 'Error processing donation. Please try again.';
+                showErrorMessage(errorMsg);
                 resetProceedButton();
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error processing donation. Please try again.');
+            showErrorMessage('Network error. Please check your connection and try again.');
             resetProceedButton();
         });
     }
@@ -218,9 +241,9 @@
     // Stripe Payment
     function processStripePayment(methodData) {
         // This would integrate with Stripe's payment form
-        // For now, redirect to a Stripe payment page or show Stripe Elements
-        alert('Stripe integration coming soon. Please use the PayPal option.');
-        processFallbackPayment();
+        // For now, show message and fallback
+        showErrorMessage('Stripe integration is not yet configured. Redirecting to PayPal...');
+        setTimeout(() => processFallbackPayment(), 2000);
     }
 
     // PayPal Payment
@@ -236,18 +259,28 @@
 
     // Fallback Payment (PayPal.me or donation button)
     function processFallbackPayment() {
-        // Use PayPal.me link or generic PayPal donate button
-        const paypalMeUsername = 'frenchpracticehub'; // This should be configurable
+        // Use PayPal.me link - get from localized data or use default
+        const paypalMeUsername = (typeof fphDonation !== 'undefined' && fphDonation.paypalMeUsername) 
+            ? fphDonation.paypalMeUsername 
+            : 'frenchpracticehub';
         const paypalMeUrl = `https://www.paypal.me/${paypalMeUsername}/${selectedAmount}`;
+        
+        // Show success message
+        if (selectedAmountDisplay) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'donation-success-message';
+            successDiv.style.cssText = 'background: #D1FAE5; border-left: 4px solid #10B981; padding: 15px; border-radius: 8px; margin: 15px 0; color: #065F46;';
+            successDiv.textContent = 'Thank you! A new tab will open with PayPal to complete your donation.';
+            proceedButton.parentNode.insertBefore(successDiv, proceedButton);
+        }
         
         // Open in new tab
         window.open(paypalMeUrl, '_blank');
         
-        // Reset button and show success message
+        // Reset button
         setTimeout(() => {
             resetProceedButton();
-            alert('Thank you for your donation! You will be redirected to PayPal to complete the transaction.');
-        }, 1000);
+        }, 2000);
     }
 
     // Reset Proceed Button

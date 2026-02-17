@@ -38,7 +38,7 @@ get_header();
                         <circle cx="12" cy="12" r="10"></circle>
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
-                    <span><?php esc_html_e('30-90 minutes', 'french-practice-hub'); ?></span>
+                    <span id="session-duration-display" data-duration="30-90 minutes"><?php esc_html_e('30-90 minutes', 'french-practice-hub'); ?></span>
                 </div>
                 <div class="session-detail">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
