@@ -229,8 +229,9 @@
                         // Update comment count
                         const $discussionItem = $form.closest('.discussion-item');
                         const $commentCount = $discussionItem.find('.discussion-comments-count');
-                        const currentCount = parseInt($commentCount.text()) || 0;
-                        $commentCount.text((currentCount + 1) + ' comments');
+                        const currentCountText = $commentCount.text();
+                        const currentCount = parseInt(currentCountText.match(/\d+/)) || 0;
+                        $commentCount.html('💬 ' + (currentCount + 1) + ' comments');
                     } else {
                         Community.showMessage(response.data.message, 'error');
                     }
