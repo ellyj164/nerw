@@ -770,6 +770,11 @@ function french_practice_hub_activation() {
             'template' => 'page-booking-calendar.php',
             'content'  => '',
         ),
+        'donate' => array(
+            'title'    => 'Make a Donation',
+            'template' => 'page-donate.php',
+            'content'  => '',
+        ),
     );
 
     $created_pages = array();
@@ -1365,6 +1370,33 @@ function fph_enqueue_booking_scripts() {
             array(
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'nonce'   => wp_create_nonce( 'fph_modern_booking_nonce' ),
+            )
+        );
+    }
+    
+    // Donation page
+    if ( is_page_template( 'page-donate.php' ) ) {
+        wp_enqueue_style(
+            'fph-donate',
+            get_template_directory_uri() . '/assets/css/donate.css',
+            array(),
+            wp_get_theme()->get( 'Version' )
+        );
+
+        wp_enqueue_script(
+            'fph-donate',
+            get_template_directory_uri() . '/assets/js/donate.js',
+            array(),
+            wp_get_theme()->get( 'Version' ),
+            true
+        );
+
+        wp_localize_script(
+            'fph-donate',
+            'fphDonation',
+            array(
+                'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                'nonce'   => wp_create_nonce( 'fph_donation_nonce' ),
             )
         );
     }
@@ -2292,3 +2324,113 @@ function fph_booking_calendar_customizer( $wp_customize ) {
     ) );
 }
 add_action( 'customize_register', 'fph_booking_calendar_customizer' );
+
+/**
+ * Detect available payment method for donations
+ */
+function fph_detect_payment_method() {
+    $method = array(
+        'method' => 'fallback',
+        'data'   => array()
+    );
+
+    // Check for WooCommerce
+    if ( class_exists( 'WooCommerce' ) ) {
+        $method['method'] = 'woocommerce';
+    }
+    // Check for Stripe plugins
+    elseif ( class_exists( 'WP_Simple_Pay' ) || function_exists( 'stripe_checkout_session' ) ) {
+        $method['method'] = 'stripe';
+    }
+    // Check for PayPal plugins
+    elseif ( class_exists( 'WPPayPalExpressCheckout' ) || function_exists( 'paypal_donate_button' ) ) {
+        $method['method'] = 'paypal';
+        $method['data']['paypal_email'] = get_option( 'fph_paypal_email', 'contact@frenchpracticehub.com' );
+    }
+    // Fallback
+    else {
+        $method['method'] = 'fallback';
+    }
+
+    wp_send_json_success( $method );
+}
+add_action( 'wp_ajax_fph_detect_payment_method', 'fph_detect_payment_method' );
+add_action( 'wp_ajax_nopriv_fph_detect_payment_method', 'fph_detect_payment_method' );
+
+/**
+ * Add donation to WooCommerce cart
+ */
+function fph_add_donation_to_cart() {
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'fph_donation_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'french-practice-hub' ) ) );
+        return;
+    }
+
+    // Check if WooCommerce is active
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'WooCommerce is not active.', 'french-practice-hub' ) ) );
+        return;
+    }
+
+    $amount = isset( $_POST['amount'] ) ? floatval( $_POST['amount'] ) : 0;
+
+    if ( $amount <= 0 ) {
+        wp_send_json_error( array( 'message' => __( 'Invalid donation amount.', 'french-practice-hub' ) ) );
+        return;
+    }
+
+    // Check if donation product exists, create if not
+    $donation_product_id = get_option( 'fph_donation_product_id' );
+    
+    if ( ! $donation_product_id || ! get_post( $donation_product_id ) ) {
+        // Create donation product
+        $donation_product_id = wp_insert_post( array(
+            'post_title'   => 'Donation',
+            'post_content' => 'Support French Practice Hub',
+            'post_status'  => 'publish',
+            'post_type'    => 'product',
+        ) );
+
+        if ( $donation_product_id ) {
+            // Set product as virtual and set price to 0 (we'll override with custom price)
+            update_post_meta( $donation_product_id, '_virtual', 'yes' );
+            update_post_meta( $donation_product_id, '_price', '0' );
+            update_post_meta( $donation_product_id, '_regular_price', '0' );
+            update_post_meta( $donation_product_id, '_sold_individually', 'yes' );
+            
+            // Save the product ID for future use
+            update_option( 'fph_donation_product_id', $donation_product_id );
+        }
+    }
+
+    if ( ! $donation_product_id ) {
+        wp_send_json_error( array( 'message' => __( 'Failed to create donation product.', 'french-practice-hub' ) ) );
+        return;
+    }
+
+    // Clear cart to ensure only donation is in cart
+    WC()->cart->empty_cart();
+
+    // Add donation to cart with custom price
+    $cart_item_key = WC()->cart->add_to_cart( $donation_product_id, 1 );
+
+    if ( $cart_item_key ) {
+        // Set custom price
+        foreach ( WC()->cart->get_cart() as $key => $cart_item ) {
+            if ( $key === $cart_item_key ) {
+                $cart_item['data']->set_price( $amount );
+            }
+        }
+
+        wp_send_json_success( array(
+            'message'      => __( 'Donation added to cart.', 'french-practice-hub' ),
+            'checkout_url' => wc_get_checkout_url(),
+        ) );
+    } else {
+        wp_send_json_error( array( 'message' => __( 'Failed to add donation to cart.', 'french-practice-hub' ) ) );
+    }
+}
+add_action( 'wp_ajax_fph_add_donation_to_cart', 'fph_add_donation_to_cart' );
+add_action( 'wp_ajax_nopriv_fph_add_donation_to_cart', 'fph_add_donation_to_cart' );
+
