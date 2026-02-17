@@ -1400,6 +1400,37 @@ function fph_handle_booking_submission() {
         wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'french-practice-hub' ) ) );
     }
 
+    // Check for double-booking
+    $slot_key = strtolower( $booking_day ) . '_' . sanitize_title( $booking_time );
+    $existing_bookings = new WP_Query( array(
+        'post_type'   => 'fph_booking',
+        'post_status' => 'publish',
+        'meta_query'  => array(
+            'relation' => 'AND',
+            array(
+                'key'     => '_booking_day',
+                'value'   => $booking_day,
+                'compare' => '=',
+            ),
+            array(
+                'key'     => '_booking_time',
+                'value'   => $booking_time,
+                'compare' => '=',
+            ),
+            array(
+                'key'     => '_booking_status',
+                'value'   => 'cancelled',
+                'compare' => '!=',
+            ),
+        ),
+    ) );
+
+    if ( $existing_bookings->have_posts() ) {
+        wp_reset_postdata();
+        wp_send_json_error( array( 'message' => __( 'Sorry, this time slot has already been booked. Please select a different time.', 'french-practice-hub' ) ) );
+    }
+    wp_reset_postdata();
+
     // Create booking post
     $post_title = sprintf(
         '%s - %s - %s',
@@ -1456,7 +1487,7 @@ add_action( 'wp_ajax_nopriv_fph_submit_booking', 'fph_handle_booking_submission'
  */
 function fph_send_booking_notification( $booking_data ) {
     // Get booking email from theme customizer, with fallback to default
-    $to = get_theme_mod( 'fph_booking_notification_email', 'booking@frenchpracticehub.com' );
+    $to = get_theme_mod( 'fph_booking_notification_email', 'contact@frenchpracticehub.com' );
     
     // Allow filtering of notification email
     $to = apply_filters( 'fph_booking_notification_email', $to );
@@ -1539,6 +1570,57 @@ function fph_get_booked_slots() {
 
     return $booked_slots;
 }
+
+/**
+ * AJAX endpoint to get booked slots for a specific date
+ */
+function fph_get_booked_slots_ajax() {
+    // Get the date parameter
+    $date = isset( $_GET['date'] ) ? sanitize_text_field( $_GET['date'] ) : '';
+    
+    if ( empty( $date ) ) {
+        wp_send_json_error( array( 'message' => __( 'Date parameter is required.', 'french-practice-hub' ) ) );
+    }
+    
+    // Validate date format (YYYY-MM-DD)
+    if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) ) {
+        wp_send_json_error( array( 'message' => __( 'Invalid date format.', 'french-practice-hub' ) ) );
+    }
+    
+    $booked_slots = array();
+    
+    // Query bookings for the specific date
+    $args = array(
+        'post_type'      => 'fph_booking',
+        'posts_per_page' => -1,
+        'meta_query'     => array(
+            'relation' => 'AND',
+            array(
+                'key'     => '_booking_date',
+                'value'   => $date,
+                'compare' => '=',
+            ),
+            array(
+                'key'     => '_booking_status',
+                'value'   => 'cancelled',
+                'compare' => '!=',
+            ),
+        ),
+    );
+    
+    $bookings = get_posts( $args );
+    
+    foreach ( $bookings as $booking ) {
+        $time = get_post_meta( $booking->ID, '_booking_time', true );
+        if ( ! empty( $time ) ) {
+            $booked_slots[] = $time;
+        }
+    }
+    
+    wp_send_json_success( array( 'booked_slots' => $booked_slots ) );
+}
+add_action( 'wp_ajax_fph_get_booked_slots', 'fph_get_booked_slots_ajax' );
+add_action( 'wp_ajax_nopriv_fph_get_booked_slots', 'fph_get_booked_slots_ajax' );
 
 /**
  * Handle modern booking form submission via AJAX
@@ -1660,7 +1742,7 @@ add_action( 'wp_ajax_nopriv_fph_submit_modern_booking', 'fph_handle_modern_booki
  */
 function fph_send_modern_booking_notification( $booking_data ) {
     // Get booking email from theme customizer
-    $admin_email = get_theme_mod( 'fph_booking_notification_email', 'booking@frenchpracticehub.com' );
+    $admin_email = get_theme_mod( 'fph_booking_notification_email', 'contact@frenchpracticehub.com' );
     $admin_email = apply_filters( 'fph_booking_notification_email', $admin_email );
     
     $subject = sprintf(
@@ -2118,14 +2200,14 @@ function fph_newsletter_customizer( $wp_customize ) {
     
     // Booking Email Setting
     $wp_customize->add_setting( 'fph_booking_notification_email', array(
-        'default'           => 'booking@frenchpracticehub.com',
+        'default'           => 'contact@frenchpracticehub.com',
         'sanitize_callback' => 'sanitize_email',
         'transport'         => 'refresh',
     ) );
     
     $wp_customize->add_control( 'fph_booking_notification_email', array(
         'label'       => __( 'Booking Notification Email', 'french-practice-hub' ),
-        'description' => __( 'Email address to receive booking notifications. Default: booking@frenchpracticehub.com', 'french-practice-hub' ),
+        'description' => __( 'Email address to receive booking notifications. Default: contact@frenchpracticehub.com', 'french-practice-hub' ),
         'section'     => 'fph_newsletter_settings',
         'type'        => 'email',
     ) );
@@ -2190,7 +2272,7 @@ function fph_booking_calendar_customizer( $wp_customize ) {
     
     // Booking Notification Email
     $wp_customize->add_setting( 'fph_booking_notification_email', array(
-        'default'           => 'booking@frenchpracticehub.com',
+        'default'           => 'contact@frenchpracticehub.com',
         'sanitize_callback' => 'sanitize_email',
         'transport'         => 'refresh',
     ) );

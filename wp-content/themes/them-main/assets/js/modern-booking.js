@@ -13,28 +13,20 @@
 
     // Configuration
     const AVAILABILITY_SCHEDULE = {
-        // Kids sessions: specific times
-        kids: [
-            { start: '06:00', end: '07:30' },
-            { start: '08:00', end: '09:30' },
-            { start: '11:00', end: '12:30' },
-            { start: '14:00', end: '15:30' },
-            { start: '17:00', end: '18:30' },
-            { start: '19:15', end: '20:45' },
-            { start: '19:30', end: '21:00' }
+        // All days (Monday-Sunday): 05:30-07:30 in 30-min slots
+        allDays: [
+            { start: '05:30', end: '07:30', days: [1, 2, 3, 4, 5, 6, 0] } // Mon-Sun
         ],
-        // Adults sessions: specific times
-        adults: [
-            { start: '05:30', end: '07:30' },
-            { start: '08:00', end: '10:00' },
-            { start: '11:00', end: '13:00' },
-            { start: '14:00', end: '16:00' },
-            { start: '17:00', end: '19:00' },
-            { start: '19:30', end: '21:30' }
+        // Weekend only (Saturday-Sunday): 08:00-10:00 in 30-min slots
+        weekendOnly: [
+            { start: '08:00', end: '10:00', days: [6, 0] } // Sat, Sun
         ],
-        // Break time (unavailable)
-        break: [
-            { start: '16:00', end: '17:00' }
+        // Mixed availability slots
+        mixed: [
+            { start: '19:30', end: '20:00', days: [1, 2, 4, 6, 0] }, // Mon, Tue, Thu, Sat, Sun
+            { start: '20:00', end: '20:30', days: [1, 2, 4, 6, 0] }, // Mon, Tue, Thu, Sat, Sun
+            { start: '20:30', end: '21:00', days: [1, 2, 6, 0] },    // Mon, Tue, Sat, Sun
+            { start: '21:00', end: '21:30', days: [1, 2, 3, 4, 6, 0] } // Mon, Tue, Wed, Thu, Sat, Sun
         ]
     };
 
@@ -69,9 +61,27 @@
             return Promise.resolve();
         }
         
-        // In a real implementation, fetch from server
-        // For now, return empty (server-side validation handles conflicts)
-        return Promise.resolve();
+        // Fetch from server via AJAX
+        return fetch(fphBooking.ajaxurl + '?action=fph_get_booked_slots&date=' + dateStr, {
+            method: 'GET',
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data.booked_slots) {
+                // Mark date as cached
+                bookedSlots[dateStr] = true;
+                
+                // Store each booked slot
+                data.data.booked_slots.forEach(time => {
+                    const slotKey = `${dateStr}-${time}`;
+                    bookedSlots[slotKey] = true;
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching booked slots:', error);
+        });
     }
     
     // Check if a slot is booked
@@ -213,8 +223,12 @@
     function selectDate(date) {
         selectedDate = date;
         renderCalendar();
-        renderTimeSlots(date);
-        updateSelectedDateDisplay(date);
+        
+        // Fetch booked slots before rendering time slots
+        fetchBookedSlots(date).then(() => {
+            renderTimeSlots(date);
+            updateSelectedDateDisplay(date);
+        });
     }
 
     // Update Selected Date Display
@@ -226,7 +240,7 @@
     }
 
     // Generate Time Slots
-    function generateTimeSlots(startTime, endTime, interval = 15) {
+    function generateTimeSlots(startTime, endTime, interval = 30) {
         const slots = [];
         const [startHour, startMin] = startTime.split(':').map(Number);
         const [endHour, endMin] = endTime.split(':').map(Number);
@@ -234,7 +248,7 @@
         let currentTime = startHour * 60 + startMin;
         const endTimeMin = endHour * 60 + endMin;
         
-        while (currentTime <= endTimeMin - 30) { // Minimum 30 min slot
+        while (currentTime < endTimeMin) {
             const hour = Math.floor(currentTime / 60);
             const min = currentTime % 60;
             const timeStr = `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
@@ -251,33 +265,45 @@
         
         timeslotsContainer.innerHTML = '';
         
-        // Get day of week
+        // Get day of week (0 = Sunday, 1 = Monday, etc.)
         const dayOfWeek = date.getDay();
-        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6); // Sunday=0, Saturday=6
-        const isWeekday = !isWeekend;
         
-        // Generate all available time slots
+        // Generate all available time slots for this specific day
         const allSlots = [];
         
-        // Kids sessions - available all week
-        AVAILABILITY_SCHEDULE.kids.forEach(session => {
-            const slots = generateTimeSlots(session.start, session.end);
-            slots.forEach(time => {
-                allSlots.push({ time, type: 'kids', start: session.start, end: session.end });
-            });
+        // All days slots
+        AVAILABILITY_SCHEDULE.allDays.forEach(session => {
+            if (session.days.includes(dayOfWeek)) {
+                const slots = generateTimeSlots(session.start, session.end, 30);
+                slots.forEach(time => {
+                    allSlots.push({ time, type: 'general', start: session.start, end: session.end });
+                });
+            }
         });
         
-        // Adults sessions - available all week
-        AVAILABILITY_SCHEDULE.adults.forEach(session => {
-            const slots = generateTimeSlots(session.start, session.end);
-            slots.forEach(time => {
-                allSlots.push({ time, type: 'adults', start: session.start, end: session.end });
-            });
+        // Weekend only slots
+        AVAILABILITY_SCHEDULE.weekendOnly.forEach(session => {
+            if (session.days.includes(dayOfWeek)) {
+                const slots = generateTimeSlots(session.start, session.end, 30);
+                slots.forEach(time => {
+                    allSlots.push({ time, type: 'general', start: session.start, end: session.end });
+                });
+            }
+        });
+        
+        // Mixed availability slots
+        AVAILABILITY_SCHEDULE.mixed.forEach(session => {
+            if (session.days.includes(dayOfWeek)) {
+                const slots = generateTimeSlots(session.start, session.end, 30);
+                slots.forEach(time => {
+                    allSlots.push({ time, type: 'general', start: session.start, end: session.end });
+                });
+            }
         });
         
         // Remove duplicates and sort
         const uniqueSlots = Array.from(new Map(
-            allSlots.map(slot => [`${slot.time}-${slot.type}`, slot])
+            allSlots.map(slot => [slot.time, slot])
         ).values());
         
         uniqueSlots.sort((a, b) => {
@@ -304,12 +330,17 @@
                 const isBooked = isSlotBooked(date, slot.time);
                 
                 slotEl.className = isBooked ? 'timeslot booked' : 'timeslot';
-                slotEl.innerHTML = `
-                    ${slot.time}
-                    <span class="timeslot-badge ${slot.type}">${slot.type}</span>
-                `;
                 
-                if (!isBooked) {
+                if (isBooked) {
+                    slotEl.innerHTML = `
+                        ${slot.time}
+                        <span class="timeslot-badge booked">Booked</span>
+                    `;
+                } else {
+                    slotEl.innerHTML = `
+                        ${slot.time}
+                        <span class="timeslot-badge available">Available</span>
+                    `;
                     slotEl.addEventListener('click', () => selectTimeSlot(slot, date));
                 }
                 
@@ -342,20 +373,17 @@
         // Update summary
         document.getElementById('summary-date').textContent = dateStr;
         document.getElementById('summary-time').textContent = slot.time;
-        document.getElementById('summary-type').textContent = slot.type.charAt(0).toUpperCase() + slot.type.slice(1);
+        document.getElementById('summary-type').textContent = 'French Session';
         
         // Set hidden fields
         document.getElementById('booking-date-hidden').value = date.toISOString().split('T')[0];
         document.getElementById('booking-time-hidden').value = slot.time;
-        document.getElementById('booking-type-hidden').value = slot.type;
+        document.getElementById('booking-type-hidden').value = 'general';
         document.getElementById('booking-timezone-hidden').value = timezoneSelect ? timezoneSelect.value : 'Africa/Kigali';
         
-        // Show/hide student age field
+        // Hide student age field since we're no longer distinguishing kids/adults
         const studentAgeRow = document.getElementById('student-age-row');
-        if (slot.type === 'kids') {
-            studentAgeRow.style.display = 'block';
-            document.getElementById('booking-student-age').setAttribute('required', 'required');
-        } else {
+        if (studentAgeRow) {
             studentAgeRow.style.display = 'none';
             document.getElementById('booking-student-age').removeAttribute('required');
         }
@@ -416,9 +444,13 @@
             if (data.success) {
                 setTimeout(() => {
                     closeModal();
-                    // Refresh time slots to mark as booked
+                    // Clear booked slots cache and refresh time slots
                     if (selectedDate) {
-                        renderTimeSlots(selectedDate);
+                        const dateStr = selectedDate.toISOString().split('T')[0];
+                        delete bookedSlots[dateStr]; // Clear cache for this date
+                        fetchBookedSlots(selectedDate).then(() => {
+                            renderTimeSlots(selectedDate);
+                        });
                     }
                 }, 2000);
             }
