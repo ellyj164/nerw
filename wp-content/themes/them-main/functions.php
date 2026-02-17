@@ -2435,3 +2435,512 @@ function fph_add_donation_to_cart() {
 add_action( 'wp_ajax_fph_add_donation_to_cart', 'fph_add_donation_to_cart' );
 add_action( 'wp_ajax_nopriv_fph_add_donation_to_cart', 'fph_add_donation_to_cart' );
 
+/**
+ * ================================================================
+ * COMMUNITY FEATURE
+ * ================================================================
+ * WordPress-native community implementation with custom post types
+ */
+
+/**
+ * Register custom post type for community groups
+ */
+function fph_register_community_post_type() {
+    $labels = array(
+        'name'               => __( 'Community Groups', 'french-practice-hub' ),
+        'singular_name'      => __( 'Community Group', 'french-practice-hub' ),
+        'menu_name'          => __( 'Community', 'french-practice-hub' ),
+        'add_new'            => __( 'Add New Group', 'french-practice-hub' ),
+        'add_new_item'       => __( 'Add New Community Group', 'french-practice-hub' ),
+        'edit_item'          => __( 'Edit Community Group', 'french-practice-hub' ),
+        'new_item'           => __( 'New Community Group', 'french-practice-hub' ),
+        'view_item'          => __( 'View Community Group', 'french-practice-hub' ),
+        'search_items'       => __( 'Search Community Groups', 'french-practice-hub' ),
+        'not_found'          => __( 'No community groups found', 'french-practice-hub' ),
+        'not_found_in_trash' => __( 'No community groups found in Trash', 'french-practice-hub' ),
+    );
+
+    $args = array(
+        'labels'              => $labels,
+        'public'              => true,
+        'publicly_queryable'  => true,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'query_var'           => true,
+        'rewrite'             => array( 'slug' => 'community-group' ),
+        'capability_type'     => 'post',
+        'has_archive'         => false,
+        'hierarchical'        => false,
+        'menu_position'       => 25,
+        'menu_icon'           => 'dashicons-groups',
+        'supports'            => array( 'title', 'editor', 'thumbnail' ),
+        'show_in_rest'        => true,
+    );
+
+    register_post_type( 'fph_community', $args );
+}
+add_action( 'init', 'fph_register_community_post_type' );
+
+/**
+ * Register custom post type for community discussions
+ */
+function fph_register_discussion_post_type() {
+    $labels = array(
+        'name'               => __( 'Discussions', 'french-practice-hub' ),
+        'singular_name'      => __( 'Discussion', 'french-practice-hub' ),
+        'menu_name'          => __( 'Discussions', 'french-practice-hub' ),
+        'add_new'            => __( 'Add New Discussion', 'french-practice-hub' ),
+        'add_new_item'       => __( 'Add New Discussion', 'french-practice-hub' ),
+        'edit_item'          => __( 'Edit Discussion', 'french-practice-hub' ),
+        'new_item'           => __( 'New Discussion', 'french-practice-hub' ),
+        'view_item'          => __( 'View Discussion', 'french-practice-hub' ),
+        'search_items'       => __( 'Search Discussions', 'french-practice-hub' ),
+        'not_found'          => __( 'No discussions found', 'french-practice-hub' ),
+        'not_found_in_trash' => __( 'No discussions found in Trash', 'french-practice-hub' ),
+    );
+
+    $args = array(
+        'labels'              => $labels,
+        'public'              => true,
+        'publicly_queryable'  => true,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'query_var'           => true,
+        'rewrite'             => array( 'slug' => 'discussion' ),
+        'capability_type'     => 'post',
+        'has_archive'         => false,
+        'hierarchical'        => false,
+        'menu_position'       => 26,
+        'menu_icon'           => 'dashicons-format-chat',
+        'supports'            => array( 'title', 'editor', 'author', 'comments' ),
+        'show_in_rest'        => true,
+    );
+
+    register_post_type( 'fph_discussion', $args );
+}
+add_action( 'init', 'fph_register_discussion_post_type' );
+
+/**
+ * Create default community groups on theme activation
+ */
+function fph_create_default_communities() {
+    // Check if communities already exist
+    $existing = get_posts( array(
+        'post_type'      => 'fph_community',
+        'posts_per_page' => 1,
+        'post_status'    => 'any',
+    ) );
+
+    if ( ! empty( $existing ) ) {
+        return; // Communities already exist
+    }
+
+    // Define default communities
+    $communities = array(
+        array(
+            'title'       => 'Beginner',
+            'slug'        => 'beginner',
+            'description' => 'Join our beginner community for A1.1–A1 level learners.',
+            'level_range' => 'A1.1–A1',
+            'icon'        => '🟢',
+            'color'       => '#22c55e',
+        ),
+        array(
+            'title'       => 'Elementary',
+            'slug'        => 'elementary',
+            'description' => 'Connect with other A2 level learners in our elementary community.',
+            'level_range' => 'A2',
+            'icon'        => '🔵',
+            'color'       => '#3b82f6',
+        ),
+        array(
+            'title'       => 'Intermediate',
+            'slug'        => 'intermediate',
+            'description' => 'Join intermediate learners at the B1–B2 level.',
+            'level_range' => 'B1–B2',
+            'icon'        => '🟡',
+            'color'       => '#eab308',
+        ),
+        array(
+            'title'       => 'Advanced',
+            'slug'        => 'advanced',
+            'description' => 'Connect with advanced C1–C2 level French learners.',
+            'level_range' => 'C1–C2',
+            'icon'        => '🔴',
+            'color'       => '#ef4444',
+        ),
+    );
+
+    foreach ( $communities as $community ) {
+        $post_id = wp_insert_post( array(
+            'post_title'   => $community['title'],
+            'post_name'    => $community['slug'],
+            'post_content' => $community['description'],
+            'post_status'  => 'publish',
+            'post_type'    => 'fph_community',
+        ) );
+
+        if ( $post_id ) {
+            update_post_meta( $post_id, 'level_range', $community['level_range'] );
+            update_post_meta( $post_id, 'icon', $community['icon'] );
+            update_post_meta( $post_id, 'color', $community['color'] );
+        }
+    }
+
+    // Create community page
+    $page_exists = get_page_by_path( 'community' );
+    if ( ! $page_exists ) {
+        wp_insert_post( array(
+            'post_title'   => 'Community Hub',
+            'post_name'    => 'community',
+            'post_content' => '<!-- This page uses the Community Hub page template -->',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'page_template' => 'page-community.php',
+        ) );
+    }
+}
+add_action( 'after_switch_theme', 'fph_create_default_communities' );
+
+/**
+ * Get all community groups
+ */
+function fph_get_communities() {
+    $communities = get_posts( array(
+        'post_type'      => 'fph_community',
+        'posts_per_page' => -1,
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+    ) );
+
+    $result = array();
+    foreach ( $communities as $community ) {
+        $result[] = array(
+            'id'          => $community->ID,
+            'title'       => $community->post_title,
+            'slug'        => $community->post_name,
+            'description' => $community->post_content,
+            'level_range' => get_post_meta( $community->ID, 'level_range', true ),
+            'icon'        => get_post_meta( $community->ID, 'icon', true ),
+            'color'       => get_post_meta( $community->ID, 'color', true ),
+            'member_count' => fph_get_community_member_count( $community->post_name ),
+        );
+    }
+
+    return $result;
+}
+
+/**
+ * Join a community
+ */
+function fph_join_community( $user_id, $community_slug ) {
+    if ( ! $user_id ) {
+        return false;
+    }
+
+    $communities = get_user_meta( $user_id, 'fph_communities', true );
+    if ( ! is_array( $communities ) ) {
+        $communities = array();
+    }
+
+    if ( ! in_array( $community_slug, $communities ) ) {
+        $communities[] = $community_slug;
+        update_user_meta( $user_id, 'fph_communities', $communities );
+        return true;
+    }
+
+    return false; // Already a member
+}
+
+/**
+ * Leave a community
+ */
+function fph_leave_community( $user_id, $community_slug ) {
+    if ( ! $user_id ) {
+        return false;
+    }
+
+    $communities = get_user_meta( $user_id, 'fph_communities', true );
+    if ( ! is_array( $communities ) ) {
+        return false;
+    }
+
+    $key = array_search( $community_slug, $communities );
+    if ( $key !== false ) {
+        unset( $communities[ $key ] );
+        update_user_meta( $user_id, 'fph_communities', array_values( $communities ) );
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Check if user is a member of a community
+ */
+function fph_is_member( $user_id, $community_slug ) {
+    if ( ! $user_id ) {
+        return false;
+    }
+
+    $communities = get_user_meta( $user_id, 'fph_communities', true );
+    if ( ! is_array( $communities ) ) {
+        return false;
+    }
+
+    return in_array( $community_slug, $communities );
+}
+
+/**
+ * Get community members
+ */
+function fph_get_community_members( $community_slug ) {
+    global $wpdb;
+
+    $user_ids = $wpdb->get_col( 
+        $wpdb->prepare(
+            "SELECT user_id FROM {$wpdb->usermeta} 
+            WHERE meta_key = 'fph_communities' 
+            AND meta_value LIKE %s",
+            '%' . $wpdb->esc_like( $community_slug ) . '%'
+        )
+    );
+
+    return $user_ids;
+}
+
+/**
+ * Get community member count
+ */
+function fph_get_community_member_count( $community_slug ) {
+    $members = fph_get_community_members( $community_slug );
+    return count( $members );
+}
+
+/**
+ * AJAX handler for joining a community
+ */
+function fph_ajax_join_community() {
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'fph_community_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'french-practice-hub' ) ) );
+    }
+
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( array( 
+            'message' => __( 'Please log in first to join this community.', 'french-practice-hub' ),
+            'login_required' => true,
+            'login_url' => wp_login_url( home_url( '/community/' ) ),
+        ) );
+    }
+
+    $user_id = get_current_user_id();
+    $community_slug = isset( $_POST['community_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['community_slug'] ) ) : '';
+
+    if ( empty( $community_slug ) ) {
+        wp_send_json_error( array( 'message' => __( 'Invalid community.', 'french-practice-hub' ) ) );
+    }
+
+    $result = fph_join_community( $user_id, $community_slug );
+
+    if ( $result ) {
+        $member_count = fph_get_community_member_count( $community_slug );
+        wp_send_json_success( array( 
+            'message' => __( 'Successfully joined the community!', 'french-practice-hub' ),
+            'member_count' => $member_count,
+        ) );
+    } else {
+        wp_send_json_error( array( 'message' => __( 'You are already a member of this community.', 'french-practice-hub' ) ) );
+    }
+}
+add_action( 'wp_ajax_fph_join_community', 'fph_ajax_join_community' );
+add_action( 'wp_ajax_nopriv_fph_join_community', 'fph_ajax_join_community' );
+
+/**
+ * AJAX handler for leaving a community
+ */
+function fph_ajax_leave_community() {
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'fph_community_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'french-practice-hub' ) ) );
+    }
+
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( array( 'message' => __( 'You must be logged in.', 'french-practice-hub' ) ) );
+    }
+
+    $user_id = get_current_user_id();
+    $community_slug = isset( $_POST['community_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['community_slug'] ) ) : '';
+
+    if ( empty( $community_slug ) ) {
+        wp_send_json_error( array( 'message' => __( 'Invalid community.', 'french-practice-hub' ) ) );
+    }
+
+    $result = fph_leave_community( $user_id, $community_slug );
+
+    if ( $result ) {
+        $member_count = fph_get_community_member_count( $community_slug );
+        wp_send_json_success( array( 
+            'message' => __( 'You have left the community.', 'french-practice-hub' ),
+            'member_count' => $member_count,
+        ) );
+    } else {
+        wp_send_json_error( array( 'message' => __( 'You are not a member of this community.', 'french-practice-hub' ) ) );
+    }
+}
+add_action( 'wp_ajax_fph_leave_community', 'fph_ajax_leave_community' );
+
+/**
+ * AJAX handler for posting a new discussion
+ */
+function fph_ajax_post_discussion() {
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'fph_community_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'french-practice-hub' ) ) );
+    }
+
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( array( 'message' => __( 'You must be logged in to post a discussion.', 'french-practice-hub' ) ) );
+    }
+
+    $user_id = get_current_user_id();
+    $community_slug = isset( $_POST['community_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['community_slug'] ) ) : '';
+    $title = isset( $_POST['title'] ) ? sanitize_text_field( wp_unslash( $_POST['title'] ) ) : '';
+    $content = isset( $_POST['content'] ) ? wp_kses_post( wp_unslash( $_POST['content'] ) ) : '';
+
+    if ( empty( $community_slug ) || empty( $title ) || empty( $content ) ) {
+        wp_send_json_error( array( 'message' => __( 'Please fill in all fields.', 'french-practice-hub' ) ) );
+    }
+
+    // Check if user is a member of the community
+    if ( ! fph_is_member( $user_id, $community_slug ) ) {
+        wp_send_json_error( array( 'message' => __( 'You must be a member of this community to post.', 'french-practice-hub' ) ) );
+    }
+
+    // Create discussion post
+    $post_id = wp_insert_post( array(
+        'post_title'   => $title,
+        'post_content' => $content,
+        'post_status'  => 'publish',
+        'post_type'    => 'fph_discussion',
+        'post_author'  => $user_id,
+    ) );
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_send_json_error( array( 'message' => __( 'Failed to create discussion.', 'french-practice-hub' ) ) );
+    }
+
+    // Save community association
+    update_post_meta( $post_id, 'community_level', $community_slug );
+
+    // Get author info
+    $author = get_userdata( $user_id );
+
+    wp_send_json_success( array( 
+        'message' => __( 'Discussion posted successfully!', 'french-practice-hub' ),
+        'discussion' => array(
+            'id'           => $post_id,
+            'title'        => get_the_title( $post_id ),
+            'content'      => get_the_content( null, false, $post_id ),
+            'author_name'  => $author->display_name,
+            'author_avatar' => get_avatar_url( $user_id ),
+            'date'         => get_the_date( '', $post_id ),
+            'comment_count' => 0,
+        ),
+    ) );
+}
+add_action( 'wp_ajax_fph_post_discussion', 'fph_ajax_post_discussion' );
+
+/**
+ * AJAX handler for posting a comment on a discussion
+ */
+function fph_ajax_post_comment() {
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'fph_community_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'french-practice-hub' ) ) );
+    }
+
+    // Check if user is logged in
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( array( 'message' => __( 'You must be logged in to comment.', 'french-practice-hub' ) ) );
+    }
+
+    $user_id = get_current_user_id();
+    $discussion_id = isset( $_POST['discussion_id'] ) ? intval( $_POST['discussion_id'] ) : 0;
+    $content = isset( $_POST['content'] ) ? sanitize_textarea_field( wp_unslash( $_POST['content'] ) ) : '';
+
+    if ( ! $discussion_id || empty( $content ) ) {
+        wp_send_json_error( array( 'message' => __( 'Invalid comment data.', 'french-practice-hub' ) ) );
+    }
+
+    // Get the community level for this discussion
+    $community_slug = get_post_meta( $discussion_id, 'community_level', true );
+
+    // Check if user is a member of the community
+    if ( ! fph_is_member( $user_id, $community_slug ) ) {
+        wp_send_json_error( array( 'message' => __( 'You must be a member of this community to comment.', 'french-practice-hub' ) ) );
+    }
+
+    // Add comment
+    $comment_id = wp_insert_comment( array(
+        'comment_post_ID'  => $discussion_id,
+        'comment_author'   => wp_get_current_user()->display_name,
+        'comment_content'  => $content,
+        'user_id'          => $user_id,
+        'comment_approved' => 1,
+    ) );
+
+    if ( is_wp_error( $comment_id ) ) {
+        wp_send_json_error( array( 'message' => __( 'Failed to post comment.', 'french-practice-hub' ) ) );
+    }
+
+    // Get author info
+    $author = get_userdata( $user_id );
+
+    wp_send_json_success( array( 
+        'message' => __( 'Comment posted successfully!', 'french-practice-hub' ),
+        'comment' => array(
+            'id'            => $comment_id,
+            'content'       => $content,
+            'author_name'   => $author->display_name,
+            'author_avatar' => get_avatar_url( $user_id ),
+            'date'          => get_comment_date( '', $comment_id ),
+        ),
+    ) );
+}
+add_action( 'wp_ajax_fph_post_comment', 'fph_ajax_post_comment' );
+
+/**
+ * Enqueue community assets
+ */
+function fph_enqueue_community_assets() {
+    // Only load on community page
+    if ( is_page_template( 'page-community.php' ) || is_front_page() || is_home() ) {
+        wp_enqueue_style( 
+            'fph-community-css', 
+            get_template_directory_uri() . '/assets/css/community.css', 
+            array(), 
+            '1.0.0' 
+        );
+
+        wp_enqueue_script( 
+            'fph-community-js', 
+            get_template_directory_uri() . '/assets/js/community.js', 
+            array( 'jquery' ), 
+            '1.0.0', 
+            true 
+        );
+
+        wp_localize_script( 'fph-community-js', 'fphCommunity', array(
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+            'nonce'   => wp_create_nonce( 'fph_community_nonce' ),
+            'isLoggedIn' => is_user_logged_in(),
+            'loginUrl' => wp_login_url( get_permalink() ),
+        ) );
+    }
+}
+add_action( 'wp_enqueue_scripts', 'fph_enqueue_community_assets' );
+

@@ -32,13 +32,13 @@ get_header();
             <h3 class="instructor-name"><?php echo esc_html(get_theme_mod('fph_instructor_name', 'Fidele FLE')); ?></h3>
             
             <div class="session-info">
-                <h4><?php esc_html_e('French Learning Session', 'french-practice-hub'); ?></h4>
+                <h4><?php esc_html_e('Real-time French Class / Meeting', 'french-practice-hub'); ?></h4>
                 <div class="session-detail">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
-                    <span id="session-duration-display" data-duration="30-90 minutes"><?php esc_html_e('30-90 minutes', 'french-practice-hub'); ?></span>
+                    <span id="session-duration-display" data-duration="1 Class session = 1h30 max (Kids) / 2h max (Adults)"><?php esc_html_e('1 Class session = 1h30 max (Kids) / 2h max (Adults)', 'french-practice-hub'); ?></span>
                 </div>
                 <div class="session-detail">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

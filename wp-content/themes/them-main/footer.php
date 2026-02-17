@@ -42,7 +42,7 @@
                 <div class="cta-buttons-container">
                     <div class="cta-button-group">
                         <h4><?php esc_html_e( 'Join Our Community', 'french-practice-hub' ); ?></h4>
-                        <p class="cta-description"><?php esc_html_e( 'Select your level and join our mailing list', 'french-practice-hub' ); ?></p>
+                        <p class="cta-description"><?php esc_html_e( 'Connect with learners at your level', 'french-practice-hub' ); ?></p>
                         <?php
                         // Check if a join community plugin shortcode is defined
                         $join_community_shortcode = get_theme_mod( 'fph_join_community_shortcode', '' );
@@ -54,19 +54,57 @@
                             echo wp_kses_post( do_shortcode( $join_community_shortcode ) );
                             echo '</div>';
                         } else {
-                            // Default community buttons
-                            ?>
-                            <div class="community-buttons">
-                                <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A1.1 (Pre-Beginner)' ) ); ?>" class="community-btn">A1.1</a>
-                                <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A1 (Beginner)' ) ); ?>" class="community-btn">A1</a>
-                                <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A2 (Pre-Intermediate)' ) ); ?>" class="community-btn">A2</a>
-                            </div>
-                            <?php if ( current_user_can( 'manage_options' ) ) : ?>
+                            // Display new community cards
+                            $communities = fph_get_communities();
+                            if ( ! empty( $communities ) ) :
+                                ?>
+                                <div class="community-cards-grid">
+                                    <?php foreach ( $communities as $community ) : 
+                                        $is_member = is_user_logged_in() && fph_is_member( get_current_user_id(), $community['slug'] );
+                                        $btn_text = $is_member ? __( 'Joined ✓', 'french-practice-hub' ) : __( 'Join Community', 'french-practice-hub' );
+                                        $btn_class = $is_member ? 'joined' : '';
+                                        ?>
+                                        <div class="community-card" style="--card-color: <?php echo esc_attr( $community['color'] ); ?>;">
+                                            <span class="community-card-icon"><?php echo esc_html( $community['icon'] ); ?></span>
+                                            <h5 class="community-card-title"><?php echo esc_html( $community['title'] ); ?></h5>
+                                            <p class="community-card-level"><?php echo esc_html( $community['level_range'] ); ?></p>
+                                            <button class="community-card-join-btn <?php echo esc_attr( $btn_class ); ?>" 
+                                                    data-community="<?php echo esc_attr( $community['slug'] ); ?>">
+                                                <?php echo esc_html( $btn_text ); ?>
+                                            </button>
+                                            <span class="community-card-members">
+                                                <?php 
+                                                echo esc_html( 
+                                                    sprintf( 
+                                                        _n( '%s member', '%s members', $community['member_count'], 'french-practice-hub' ), 
+                                                        number_format_i18n( $community['member_count'] ) 
+                                                    ) 
+                                                ); 
+                                                ?>
+                                            </span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <a href="<?php echo esc_url( home_url( '/community/' ) ); ?>" class="community-hub-link">
+                                    <?php esc_html_e( 'View Community Hub', 'french-practice-hub' ); ?> →
+                                </a>
+                                <?php
+                            else :
+                                // Fallback to default buttons if no communities exist
+                                ?>
+                                <div class="community-buttons">
+                                    <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A1.1 (Pre-Beginner)' ) ); ?>" class="community-btn">A1.1</a>
+                                    <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A1 (Beginner)' ) ); ?>" class="community-btn">A1</a>
+                                    <a href="<?php echo esc_url( fph_get_safe_category_link( 'Kids, A2 (Pre-Intermediate)' ) ); ?>" class="community-btn">A2</a>
+                                </div>
+                                <?php
+                            endif;
+                            
+                            if ( current_user_can( 'manage_options' ) ) : ?>
                                 <p class="community-admin-note admin-note">
                                     <?php esc_html_e( 'Admin: To integrate with a mailing list plugin, go to Appearance > Customize > Newsletter Settings and add your shortcode.', 'french-practice-hub' ); ?>
                                 </p>
-                            <?php endif; ?>
-                            <?php
+                            <?php endif;
                         }
                         ?>
                     </div>
