@@ -67,8 +67,8 @@ get_header();
                             // Mixed availability slots
                             array( 'time' => '19:30-20:00', 'type' => 'general', 'days' => array( 1, 1, 0, 1, 0, 1, 1 ) ), // Mon, Tue, Thu, Sat, Sun
                             array( 'time' => '20:00-20:30', 'type' => 'general', 'days' => array( 1, 1, 0, 1, 0, 1, 1 ) ), // Mon, Tue, Thu, Sat, Sun
-                            array( 'time' => '20:30-21:00', 'type' => 'general', 'days' => array( 1, 1, 0, 0, 0, 1, 1 ) ), // Mon, Tue, Sat, Sun
-                            array( 'time' => '21:00-21:30', 'type' => 'general', 'days' => array( 1, 1, 1, 1, 0, 1, 1 ) ), // Mon, Tue, Wed, Thu, Sat, Sun
+                            array( 'time' => '20:30-21:00', 'type' => 'general', 'days' => array( 1, 1, 0, 1, 1, 1, 1 ) ), // Mon, Tue, Thu, Fri, Sat, Sun
+                            array( 'time' => '21:00-21:30', 'type' => 'general', 'days' => array( 1, 1, 0, 1, 0, 1, 1 ) ), // Mon, Tue, Thu, Sat, Sun
                         );
 
                         // Get booked slots from database
