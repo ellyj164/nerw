@@ -22,6 +22,17 @@ get_header();
             <div class="booking-info">
                 <p><strong><?php esc_html_e( 'Timezone:', 'french-practice-hub' ); ?></strong> <?php esc_html_e( 'Kigali Time (CAT - Central Africa Time)', 'french-practice-hub' ); ?></p>
                 <p><?php esc_html_e( 'Click on a green slot to book your session. All times are shown in Kigali Time.', 'french-practice-hub' ); ?></p>
+                
+                <!-- JOIN Button -->
+                <div class="booking-join-wrapper">
+                    <a href="https://meet34.webex.com/meet/frenchpracticehub" class="btn-join-booking" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 7l-7 5 7 5V7z"></path>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                        </svg>
+                        <?php esc_html_e('JOIN SESSION', 'french-practice-hub'); ?>
+                    </a>
+                </div>
             </div>
 
             <div class="booking-calendar-wrapper">

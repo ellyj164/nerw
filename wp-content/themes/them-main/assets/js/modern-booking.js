@@ -35,6 +35,7 @@
     let selectedDate = null;
     let selectedTime = null;
     let selectedType = null;
+    let selectedSessionType = 'adults'; // Default to adults
     let bookedSlots = {}; // Cache of booked slots: 'YYYY-MM-DD-HH:MM' => true
 
     // DOM Elements
@@ -45,6 +46,7 @@
     const timeslotsContainer = document.getElementById('timeslots-container');
     const selectedDateDisplay = document.getElementById('selected-date-display');
     const timezoneSelect = document.getElementById('timezone-select');
+    const sessionTypeButtons = document.querySelectorAll('.session-type-btn');
     
     const modal = document.getElementById('booking-confirmation-modal');
     const modalOverlay = modal ? modal.querySelector('.booking-modal-overlay') : null;
@@ -135,6 +137,36 @@
 
         if (bookingForm) {
             bookingForm.addEventListener('submit', handleBookingSubmit);
+        }
+
+        // Session type selector
+        sessionTypeButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active from all buttons
+                sessionTypeButtons.forEach(b => b.classList.remove('active'));
+                // Add active to clicked button
+                this.classList.add('active');
+                // Update selected session type
+                selectedSessionType = this.getAttribute('data-session-type');
+                const duration = this.getAttribute('data-duration');
+                
+                // Update duration in left panel
+                updateSessionDuration(duration);
+                
+                // Re-render time slots if date is selected
+                if (selectedDate) {
+                    renderTimeSlots(selectedDate);
+                }
+            });
+        });
+    }
+
+    // Update session duration in left panel
+    function updateSessionDuration(duration) {
+        const durationDisplay = document.getElementById('session-duration-display');
+        if (durationDisplay) {
+            durationDisplay.textContent = duration;
+            durationDisplay.setAttribute('data-duration', duration);
         }
     }
 
@@ -370,15 +402,20 @@
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const dateStr = date.toLocaleDateString('en-US', options);
         
+        // Determine session type label
+        const sessionTypeLabel = selectedSessionType === 'kids' 
+            ? 'Kids Session (1h 30min)' 
+            : 'Adults Session (2 hours)';
+        
         // Update summary
         document.getElementById('summary-date').textContent = dateStr;
         document.getElementById('summary-time').textContent = slot.time;
-        document.getElementById('summary-type').textContent = 'French Session';
+        document.getElementById('summary-type').textContent = sessionTypeLabel;
         
         // Set hidden fields
         document.getElementById('booking-date-hidden').value = date.toISOString().split('T')[0];
         document.getElementById('booking-time-hidden').value = slot.time;
-        document.getElementById('booking-type-hidden').value = 'general';
+        document.getElementById('booking-type-hidden').value = selectedSessionType;
         document.getElementById('booking-timezone-hidden').value = timezoneSelect ? timezoneSelect.value : 'Africa/Kigali';
         
         // Hide student age field since we're no longer distinguishing kids/adults

@@ -770,6 +770,11 @@ function french_practice_hub_activation() {
             'template' => 'page-booking-calendar.php',
             'content'  => '',
         ),
+        'donate' => array(
+            'title'    => 'Make a Donation',
+            'template' => 'page-donate.php',
+            'content'  => '',
+        ),
     );
 
     $created_pages = array();
@@ -1368,6 +1373,34 @@ function fph_enqueue_booking_scripts() {
             )
         );
     }
+    
+    // Donation page
+    if ( is_page_template( 'page-donate.php' ) ) {
+        wp_enqueue_style(
+            'fph-donate',
+            get_template_directory_uri() . '/assets/css/donate.css',
+            array(),
+            wp_get_theme()->get( 'Version' )
+        );
+
+        wp_enqueue_script(
+            'fph-donate',
+            get_template_directory_uri() . '/assets/js/donate.js',
+            array(),
+            wp_get_theme()->get( 'Version' ),
+            true
+        );
+
+        wp_localize_script(
+            'fph-donate',
+            'fphDonation',
+            array(
+                'ajaxurl'          => admin_url( 'admin-ajax.php' ),
+                'nonce'            => wp_create_nonce( 'fph_donation_nonce' ),
+                'paypalMeUsername' => get_option( 'fph_paypal_me_username', 'frenchpracticehub' ),
+            )
+        );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'fph_enqueue_booking_scripts' );
 
@@ -1793,9 +1826,9 @@ function fph_send_modern_booking_notification( $booking_data ) {
     $headers = array( 'Content-Type: text/html; charset=UTF-8' );
     $admin_email_sent = wp_mail( $admin_email, $subject, $admin_message, $headers );
 
-    // Email to customer
-    $customer_subject = __( 'Booking Confirmation - French Practice Hub', 'french-practice-hub' );
-    $support_email = get_theme_mod( 'fph_booking_notification_email', 'booking@frenchpracticehub.com' );
+    // Email to customer - Pending confirmation
+    $customer_subject = __( 'Booking Request Received - French Practice Hub', 'french-practice-hub' );
+    $contact_email = get_theme_mod( 'fph_booking_notification_email', 'contact@frenchpracticehub.com' );
     $customer_message = '
     <html>
     <head>
@@ -1806,23 +1839,30 @@ function fph_send_modern_booking_notification( $booking_data ) {
             table { border-collapse: collapse; width: 100%; }
             td { padding: 10px 0; }
             td:first-child { font-weight: 600; width: 150px; }
+            .notice { background: #FEF3C7; padding: 15px; border-left: 4px solid #F59E0B; border-radius: 4px; margin: 20px 0; }
         </style>
     </head>
     <body>
-        <h2>' . esc_html__( 'Booking Confirmation', 'french-practice-hub' ) . '</h2>
+        <h2>' . esc_html__( 'Booking Request Received', 'french-practice-hub' ) . '</h2>
         <p>' . esc_html__( 'Dear', 'french-practice-hub' ) . ' ' . esc_html( $booking_data['name'] ) . ',</p>
-        <p>' . esc_html__( 'Thank you for booking a session with French Practice Hub! Your booking has been confirmed.', 'french-practice-hub' ) . '</p>
+        <p>' . esc_html__( 'Thank you for requesting a booking with French Practice Hub! We have received your booking request and it is now pending confirmation.', 'french-practice-hub' ) . '</p>
+        
+        <div class="notice">
+            <p><strong>' . esc_html__( 'Important:', 'french-practice-hub' ) . '</strong> ' . esc_html__( 'Your booking is pending confirmation. We will review your request and get back to you shortly with confirmation details.', 'french-practice-hub' ) . '</p>
+        </div>
+        
         <div class="booking-details">
-            <h3>' . esc_html__( 'Session Details', 'french-practice-hub' ) . '</h3>
+            <h3>' . esc_html__( 'Your Booking Request Details', 'french-practice-hub' ) . '</h3>
             <table>
                 <tr><td>' . esc_html__( 'Date:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['date'] ) . '</td></tr>
                 <tr><td>' . esc_html__( 'Time:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['time'] ) . ' (' . esc_html( $booking_data['timezone'] ) . ')</td></tr>
                 <tr><td>' . esc_html__( 'Session Type:', 'french-practice-hub' ) . '</td><td>' . esc_html( $booking_data['session_type'] ) . '</td></tr>
             </table>
         </div>
-        <p>' . esc_html__( 'We will send you the video conferencing details closer to your session time.', 'french-practice-hub' ) . '</p>
-        <p>' . esc_html__( 'If you need to reschedule or have any questions, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:' . esc_attr( $support_email ) . '">' . esc_html( $support_email ) . '</a></p>
-        <p>' . esc_html__( 'We look forward to seeing you!', 'french-practice-hub' ) . '</p>
+        
+        <p>' . esc_html__( 'Once your booking is confirmed, we will send you the video conferencing details and any additional information you may need.', 'french-practice-hub' ) . '</p>
+        <p>' . esc_html__( 'If you have any questions or need to make changes to your booking request, please contact us at:', 'french-practice-hub' ) . ' <a href="mailto:' . esc_attr( $contact_email ) . '">' . esc_html( $contact_email ) . '</a></p>
+        <p>' . esc_html__( 'We look forward to helping you on your French learning journey!', 'french-practice-hub' ) . '</p>
         <p><strong>French Practice Hub Team</strong></p>
     </body>
     </html>';
@@ -2285,3 +2325,113 @@ function fph_booking_calendar_customizer( $wp_customize ) {
     ) );
 }
 add_action( 'customize_register', 'fph_booking_calendar_customizer' );
+
+/**
+ * Detect available payment method for donations
+ */
+function fph_detect_payment_method() {
+    $method = array(
+        'method' => 'fallback',
+        'data'   => array()
+    );
+
+    // Check for WooCommerce
+    if ( class_exists( 'WooCommerce' ) ) {
+        $method['method'] = 'woocommerce';
+    }
+    // Check for Stripe plugins
+    elseif ( class_exists( 'WP_Simple_Pay' ) || function_exists( 'stripe_checkout_session' ) ) {
+        $method['method'] = 'stripe';
+    }
+    // Check for PayPal plugins
+    elseif ( class_exists( 'WPPayPalExpressCheckout' ) || function_exists( 'paypal_donate_button' ) ) {
+        $method['method'] = 'paypal';
+        $method['data']['paypal_email'] = get_option( 'fph_paypal_email', 'contact@frenchpracticehub.com' );
+    }
+    // Fallback
+    else {
+        $method['method'] = 'fallback';
+    }
+
+    wp_send_json_success( $method );
+}
+add_action( 'wp_ajax_fph_detect_payment_method', 'fph_detect_payment_method' );
+add_action( 'wp_ajax_nopriv_fph_detect_payment_method', 'fph_detect_payment_method' );
+
+/**
+ * Add donation to WooCommerce cart
+ */
+function fph_add_donation_to_cart() {
+    // Verify nonce
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'fph_donation_nonce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'Security check failed.', 'french-practice-hub' ) ) );
+        return;
+    }
+
+    // Check if WooCommerce is active
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        wp_send_json_error( array( 'message' => __( 'WooCommerce is not active.', 'french-practice-hub' ) ) );
+        return;
+    }
+
+    $amount = isset( $_POST['amount'] ) ? floatval( $_POST['amount'] ) : 0;
+
+    if ( $amount <= 0 ) {
+        wp_send_json_error( array( 'message' => __( 'Invalid donation amount.', 'french-practice-hub' ) ) );
+        return;
+    }
+
+    // Check if donation product exists, create if not
+    $donation_product_id = get_option( 'fph_donation_product_id' );
+    
+    if ( ! $donation_product_id || ! get_post( $donation_product_id ) ) {
+        // Create donation product
+        $donation_product_id = wp_insert_post( array(
+            'post_title'   => 'Donation',
+            'post_content' => 'Support French Practice Hub',
+            'post_status'  => 'publish',
+            'post_type'    => 'product',
+        ) );
+
+        if ( $donation_product_id ) {
+            // Set product as virtual and set price to 0 (we'll override with custom price)
+            update_post_meta( $donation_product_id, '_virtual', 'yes' );
+            update_post_meta( $donation_product_id, '_price', '0' );
+            update_post_meta( $donation_product_id, '_regular_price', '0' );
+            update_post_meta( $donation_product_id, '_sold_individually', 'yes' );
+            
+            // Save the product ID for future use
+            update_option( 'fph_donation_product_id', $donation_product_id );
+        }
+    }
+
+    if ( ! $donation_product_id ) {
+        wp_send_json_error( array( 'message' => __( 'Failed to create donation product.', 'french-practice-hub' ) ) );
+        return;
+    }
+
+    // Clear cart to ensure only donation is in cart
+    WC()->cart->empty_cart();
+
+    // Add donation to cart with custom price
+    $cart_item_key = WC()->cart->add_to_cart( $donation_product_id, 1 );
+
+    if ( $cart_item_key ) {
+        // Set custom price
+        foreach ( WC()->cart->get_cart() as $key => $cart_item ) {
+            if ( $key === $cart_item_key ) {
+                $cart_item['data']->set_price( $amount );
+            }
+        }
+
+        wp_send_json_success( array(
+            'message'      => __( 'Donation added to cart.', 'french-practice-hub' ),
+            'checkout_url' => wc_get_checkout_url(),
+        ) );
+    } else {
+        wp_send_json_error( array( 'message' => __( 'Failed to add donation to cart.', 'french-practice-hub' ) ) );
+    }
+}
+add_action( 'wp_ajax_fph_add_donation_to_cart', 'fph_add_donation_to_cart' );
+add_action( 'wp_ajax_nopriv_fph_add_donation_to_cart', 'fph_add_donation_to_cart' );
+

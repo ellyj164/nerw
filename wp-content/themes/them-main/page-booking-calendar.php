@@ -38,7 +38,7 @@ get_header();
                         <circle cx="12" cy="12" r="10"></circle>
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
-                    <span><?php esc_html_e('30-90 minutes', 'french-practice-hub'); ?></span>
+                    <span id="session-duration-display" data-duration="30-90 minutes"><?php esc_html_e('30-90 minutes', 'french-practice-hub'); ?></span>
                 </div>
                 <div class="session-detail">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -50,12 +50,48 @@ get_header();
                 <p class="session-description">
                     <?php echo esc_html(get_theme_mod('fph_session_description', __('Web conferencing details provided upon confirmation. Join us for an interactive French learning experience tailored to your level.', 'french-practice-hub'))); ?>
                 </p>
+                
+                <!-- JOIN Button -->
+                <div class="session-join-wrapper">
+                    <a href="https://meet34.webex.com/meet/frenchpracticehub" class="btn-join-session" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 7l-7 5 7 5V7z"></path>
+                            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                        </svg>
+                        <?php esc_html_e('JOIN SESSION', 'french-practice-hub'); ?>
+                    </a>
+                </div>
             </div>
         </div>
         
         <!-- Center Panel: Calendar -->
         <div class="booking-calendar-panel">
             <h2 class="panel-title"><?php esc_html_e('Select a Date & Time', 'french-practice-hub'); ?></h2>
+            
+            <!-- Session Type Selector -->
+            <div class="session-type-selector">
+                <div class="session-type-label">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span><?php esc_html_e('Session Type:', 'french-practice-hub'); ?></span>
+                </div>
+                <div class="session-type-options">
+                    <button type="button" class="session-type-btn active" data-session-type="adults" data-duration="2h">
+                        <span class="type-icon">👨‍🎓</span>
+                        <span class="type-label"><?php esc_html_e('Adults', 'french-practice-hub'); ?></span>
+                        <span class="type-duration"><?php esc_html_e('2 hours', 'french-practice-hub'); ?></span>
+                    </button>
+                    <button type="button" class="session-type-btn" data-session-type="kids" data-duration="1h30min">
+                        <span class="type-icon">👦</span>
+                        <span class="type-label"><?php esc_html_e('Kids', 'french-practice-hub'); ?></span>
+                        <span class="type-duration"><?php esc_html_e('1h 30min', 'french-practice-hub'); ?></span>
+                    </button>
+                </div>
+            </div>
             
             <!-- Month Navigation -->
             <div class="month-navigation">
